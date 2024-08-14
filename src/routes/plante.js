@@ -2,20 +2,27 @@ const router = require("express").Router();
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
 router.post("/", async (req, res) => {
-  const { name, type, prix, qte, stock } = req.body;
+  let { name, type, prix, qte, stock } = req.body;
   try {
-    if (name == "" || prix <= 0) {
-      res.status(400).json({ message: "please fill  " });
+    if (name === "" || prix <= 0) {
+      return res
+        .status(400)
+        .json({ message: "Please fill all required fields correctly." });
     }
+
     const plantExist = await prisma.plant.findFirst({
       where: {
         name,
       },
     });
+
     if (plantExist) {
-      res.status(409).json({ message: "plante exist" });
+      return res.status(409).json({ message: "Plant already exists." });
+    }
+
+    if (qte > 0) {
+      stock = true;
     }
     const plant = await prisma.plant.create({
       data: {
@@ -26,9 +33,11 @@ router.post("/", async (req, res) => {
         stock,
       },
     });
+
     res.status(201).json(plant);
   } catch (error) {
     console.log("🚀 ~ router.post ~ error:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 });
 
@@ -41,7 +50,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/getbyid/:id", async (req, res) => {
   const planteId = req.params.id;
   try {
     const plante = await prisma.plant.findFirst({
