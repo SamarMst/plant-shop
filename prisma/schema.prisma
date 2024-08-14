@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum TypePlante {
+  INDOOR
+  OUTDOOR
+}
+
+model plant {
+  id Int @id @default(autoincrement())
+
+  name String     @unique
+  type TypePlante
+  prix Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  qte   Int     @default(0)
+  stock Boolean @default(false)
+}
