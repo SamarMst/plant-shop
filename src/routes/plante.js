@@ -2,55 +2,15 @@ const router = require("express").Router();
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-router.post("/", async (req, res) => {
-  let { name, type, prix, qte, stock } = req.body;
-  try {
-    if (name === "" || prix <= 0) {
-      return res
-        .status(400)
-        .json({ message: "Please fill all required fields correctly." });
-    }
 
-    const plantExist = await prisma.plant.findFirst({
-      where: {
-        name,
-      },
-    });
+const { createPlante,getPlants } = require("../controller/plante")
 
-    if (plantExist) {
-      return res.status(409).json({ message: "Plant already exists." });
-    }
 
-    if (qte > 0) {
-      stock = true;
-    }
-    const plant = await prisma.plant.create({
-      data: {
-        name,
-        type,
-        prix,
-        qte,
-        stock,
-      },
-    });
+router.post("/", createPlante);
 
-    res.status(201).json(plant);
-  } catch (error) {
-    console.log("🚀 ~ router.post ~ error:", error);
-    res.status(500).json({ message: "Internal server error." });
-  }
-});
+router.get("/", getPlants);
 
-router.get("/", async (req, res) => {
-  try {
-    const plante = await prisma.plant.findMany();
-    res.status(200).json(plante);
-  } catch (error) {
-    console.log("🚀 ~ router.get ~ error:", error);
-  }
-});
-
-router.get("/getbyid/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const planteId = req.params.id;
   try {
     const plante = await prisma.plant.findFirst({
@@ -66,6 +26,7 @@ router.get("/getbyid/:id", async (req, res) => {
     console.log("🚀 ~ router.get ~ error:", error);
   }
 });
+
 
 router.put("/:id", async (req, res) => {
   const planteId = req.params.id;
@@ -175,13 +136,5 @@ router.put("/restock/:id", async (req, res) => {
   }
 });
 
-/**
- *  make route for modify plant also delete plant
- *
- *  (modifi prisma) : qte, stock:boolean
- *  routes => route get me all plants in stock ,
- *  route get me all plants not in stock
- *  route => restock
- */
 
 module.exports = router;
