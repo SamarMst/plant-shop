@@ -19,13 +19,16 @@ model User {
   password String
   role     Role   @default(BUYER)
 
+  userImage String?
+
   plant Plant[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-//Task : make userinfo that have one to one relation with User
+// Task : make userinfo that have one to one relation with User (crud)
+// Task : make plantCategory which have one to many relation with plant (crud)
 
 enum PlantType {
   INDOOR
@@ -40,6 +43,8 @@ model Plant {
   prix  Float
   qte   Int       @default(0)
   stock Boolean   @default(false)
+
+
 
   User      User?    @relation(fields: [userId], references: [id])
   userId    Int?

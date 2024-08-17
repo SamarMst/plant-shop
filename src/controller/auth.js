@@ -19,12 +19,12 @@ const register = async(req,res) =>{
        }
        
        const cryptedPassword = await bcrypt.hash(password,10)
+ 
        const acountCreated = await prisma.user.create({
             data:{
                 email,
                 password:cryptedPassword,
                 ...rest
-                
             }
         })
         

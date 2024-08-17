@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const createPlante = async (req, res) => {
-  let { name, type, prix, qte, stock } = req.body;
+  let { name, type, prix, qte, stock  } = req.body;
   try {
     if (name === "" || prix <= 0) {
       return res
