@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 const { createPlante,getPlants } = require("../controller/plante")
 
+//refactor the code to use the controller functions
 
 router.post("/", createPlante);
 
@@ -118,6 +119,10 @@ router.put("/restock/:id", async (req, res) => {
       },
     });
 
+    // const plante = await findPlantById(planteId);
+
+    // console.log()=result , console.log(typeof planteId)
+    
     if (plante === null) {
       return res.status(404).json({ message: "Plant not found." });
     }
@@ -135,6 +140,8 @@ router.put("/restock/:id", async (req, res) => {
     console.log("🚀 ~ router.put(/restock/:id) ~ error:", error);
   }
 });
+
+
 
 
 module.exports = router;
