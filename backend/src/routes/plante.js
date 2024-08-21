@@ -2,34 +2,38 @@ const router = require("express").Router();
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
 
 const {
   createPlant,
-  getPlants,
+  getAllPlants,
   getPlantById,
-  updatePlant,
-  deletePlant,
-  getStock,
-  getPlantsNotInStock,
+  getMyOwnPlants,
+  updatePlantById,
+  deletePlantById,
+  getPlantsInStock,
+  getPlantsOutOfStock,
   restockPlantById,
 } = require("../controller/plante");
 
-//refactor the code to use the controller functions
+const authenticateToken = require("../middleware/authenticate");
 
-router.post("/", createPlant);
+router.post("/", authenticateToken, createPlant);
 
-router.get("/", getPlants);
+router.get("/", getAllPlants);
+
+router.get("/mine", authenticateToken, getMyOwnPlants);
+
+router.get("/stock", authenticateToken, getPlantsInStock);
+
+router.get("/notinstock", getPlantsOutOfStock);
 
 router.get("/:id", getPlantById);
 
-router.put("/:id", updatePlant);
+router.put("/:id", updatePlantById);
 
-router.delete("/:id", deletePlant);
+router.delete("/:id", deletePlantById);
 
-router.get("/stock", getStock);
-
-router.get("/notinstock", getPlantsNotInStock);
-
-router.put("/restock/:id", restockPlantById);
+router.put("/restock/:id/quantity/:quantity", restockPlantById);
 
 module.exports = router;
