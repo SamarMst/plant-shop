@@ -12,7 +12,6 @@ const createPlant = async (req, res) => {
     }
 
     const existingPlant = await prisma.plant.findFirst({ where: { name } });
-    console.log(name);
     if (existingPlant) {
       return res.status(409).json({ message: "Plant already exists." });
     }
@@ -63,7 +62,11 @@ const getMyOwnPlants = async (req, res) => {
       where: { userId },
     });
     res.status(200).json(plant);
-  } catch (error) {}
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving your plants." });
+  }
 };
 
 const getPlantById = async (req, res) => {
@@ -81,20 +84,27 @@ const getPlantById = async (req, res) => {
 
 const updatePlantById = async (req, res) => {
   const plantId = req.params.id;
-  const { name, type, price, quantity, stock } = req.body;
-
+  const userId = req.user.id;
+  const { name, type, price, quantity } = req.body;
   try {
-    const plant = await findPlantById(plantId);
+    const plant = await prisma.plant.findFirst({
+      where: { id: parseInt(plantId), userId },
+    });
 
     if (!plant) {
       return res.status(404).json({ message: "Plant not found." });
+    }
+
+    if (quantity > 0) {
+      stock = true;
+    } else {
+      stock = false;
     }
 
     const updatedPlant = await prisma.plant.update({
       where: { id: parseInt(plantId) },
       data: { name, type, price, quantity, stock },
     });
-
     res.status(200).json(updatedPlant);
   } catch (error) {
     res.status(500).json({ message: "Internal server error." });
@@ -103,9 +113,11 @@ const updatePlantById = async (req, res) => {
 
 const deletePlantById = async (req, res) => {
   const plantId = req.params.id;
-
+  const userId = req.user.id;
   try {
-    const plant = await findPlantById(plantId);
+    const plant = await prisma.plant.findFirst({
+      where: { id: parseInt(plantId), userId },
+    });
 
     if (!plant) {
       return res.status(404).json({ message: "Plant not found." });
@@ -121,7 +133,7 @@ const deletePlantById = async (req, res) => {
 
 const getPlantsInStock = async (req, res) => {
   try {
-    const plantsInStock = await findPlantsByStockStatus(true);
+    const plantsInStock = await findPlantsByStockStatus(req, true);
     res.status(200).json(plantsInStock);
   } catch (error) {
     res.status(500).json({ message: "Internal server error." });
@@ -130,8 +142,7 @@ const getPlantsInStock = async (req, res) => {
 
 const getPlantsOutOfStock = async (req, res) => {
   try {
-    const plantsOutOfStock = await findPlantsByStockStatus(false);
-    console.log(plantsOutOfStock);
+    const plantsOutOfStock = await findPlantsByStockStatus(req, false);
     res.status(200).json(plantsOutOfStock);
   } catch (error) {
     res.status(500).json({
@@ -143,9 +154,12 @@ const getPlantsOutOfStock = async (req, res) => {
 const restockPlantById = async (req, res) => {
   const plantId = req.params.id;
   const quantity = req.params.quantity;
+  const userId = req.user.id;
 
   try {
-    const plant = await findPlantById(plantId);
+    const plant = await prisma.plant.findFirst({
+      where: { id: parseInt(plantId), userId },
+    });
 
     if (!plant) {
       return res.status(404).json({ message: "Plant not found." });
@@ -165,8 +179,9 @@ const restockPlantById = async (req, res) => {
   }
 };
 
-const findPlantsByStockStatus = async (stockStatus) => {
-  return await prisma.plant.findMany({ where: { stock: stockStatus } });
+const findPlantsByStockStatus = async (req, stockStatus) => {
+  const userId = req.user.id;
+  return await prisma.plant.findMany({ where: { stock: stockStatus, userId } });
 };
 
 const findPlantById = async (plantId) => {

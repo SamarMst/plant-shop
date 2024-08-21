@@ -26,14 +26,18 @@ router.get("/mine", authenticateToken, getMyOwnPlants);
 
 router.get("/stock", authenticateToken, getPlantsInStock);
 
-router.get("/notinstock", getPlantsOutOfStock);
+router.get("/notinstock", authenticateToken, getPlantsOutOfStock);
 
 router.get("/:id", getPlantById);
 
-router.put("/:id", updatePlantById);
+router.put("/:id", authenticateToken, updatePlantById);
 
-router.delete("/:id", deletePlantById);
+router.delete("/:id", authenticateToken, deletePlantById);
 
-router.put("/restock/:id/quantity/:quantity", restockPlantById);
+router.put(
+  "/restock/:id/quantity/:quantity",
+  authenticateToken,
+  restockPlantById
+);
 
 module.exports = router;
