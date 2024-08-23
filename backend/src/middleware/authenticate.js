@@ -8,7 +8,7 @@ const authenticateToken = async (req, res, next) => {
     try {
       const { ACCESS_TOKEN_SECRET } = process.env;
       const decoded = await jwt.verify(authHeader[1], ACCESS_TOKEN_SECRET);
-      req.user = decoded;
+      req.user = { id: decoded.id, role: decoded.role };
       next();
     } catch (error) {
       if (error.name === "TokenExpiredError") {

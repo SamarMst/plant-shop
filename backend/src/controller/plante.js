@@ -6,6 +6,11 @@ const createPlant = async (req, res) => {
   const categoryIdsArray = typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
   const userId = req.user.id;
   const file = req.file;
+  const userRole = req.user.role;
+
+  if (userRole !== "SELLER") {
+    return res.status(403).json({ message: "Only sellers can create plants." });
+  }
 
   try {
 
@@ -51,6 +56,7 @@ const getAllPlants = async (req, res) => {
           select: {
             id: true,
             email: true,
+            role: true,
           },
         },
         categories: {
