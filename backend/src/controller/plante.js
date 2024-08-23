@@ -2,14 +2,13 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const createPlant = async (req, res) => {
-  const { name, type, price, quantity, stock, plantCategoryId } = req.body;
+  const { name, type, price, quantity, categoryIds } = req.body;
+  const categoryIdsArray = typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
   const userId = req.user.id;
+  const file = req.file;
+
   try {
-    if (!name || price <= 0) {
-      return res
-        .status(400)
-        .json({ message: "Please fill all required fields correctly." });
-    }
+
 
     const existingPlant = await prisma.plant.findFirst({ where: { name } });
     if (existingPlant) {
@@ -17,23 +16,32 @@ const createPlant = async (req, res) => {
     }
 
     const newStockStatus = quantity > 0;
+
     const newPlant = await prisma.plant.create({
       data: {
         name,
         type,
-        price,
-        quantity,
+        price: parseFloat(price),
+        quantity: parseInt(quantity),
         stock: newStockStatus,
-        plantCategoryId,
+        plantImage: file?.filename, 
         userId,
+        //User: { connect: { id: userId } },
+        categories: {
+          create: categoryIdsArray.map(id => ({
+            plantCategory: { connect: { id } },
+          })),
+        },
       },
     });
 
     res.status(201).json(newPlant);
   } catch (error) {
+    console.error("Error creating plant:", error); 
     res.status(500).json({ message: "Internal server error." });
   }
 };
+
 
 const getAllPlants = async (req, res) => {
   try {
@@ -45,15 +53,26 @@ const getAllPlants = async (req, res) => {
             email: true,
           },
         },
+        categories: {
+          select: {
+            plantCategory: {
+              select: {
+                id: true,
+                name: true,
+              }
+            }
+          }
+        }
       },
     });
+
     res.status(200).json(plants);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "An error occurred while retrieving plants." });
+    console.log("Error retrieving plants:", error);
+    res.status(500).json({ message: "An error occurred while retrieving plants." });
   }
 };
+
 
 const getMyOwnPlants = async (req, res) => {
   try {

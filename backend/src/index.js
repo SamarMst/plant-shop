@@ -6,6 +6,7 @@ const app = express();
 //cors
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const planteRouter = require("./routes/plante");
 const authRouter = require("./routes/auth");
 
