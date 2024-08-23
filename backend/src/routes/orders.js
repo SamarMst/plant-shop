@@ -6,14 +6,14 @@ const {
   getSoldPlantsHistory,
   getBoughtPlantsHistory,
 } = require("../controller/orders");
-const authenticateToken = require("../middleware/authenticate");
 
-router.post("/", authenticateToken, createOrder);
 
-router.put("/status", authenticateToken, updateOrderStatus);
+router.post("/", createOrder);
 
-router.get("/history/sold", authenticateToken, getSoldPlantsHistory);
+router.put("/status", updateOrderStatus);
 
-router.get("/history/bought", authenticateToken, getBoughtPlantsHistory);
+router.get("/history/sold", getSoldPlantsHistory);
+
+router.get("/history/bought", getBoughtPlantsHistory);
 
 module.exports = router;
