@@ -4,19 +4,17 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
-  const { email, password, ...rest } = req.body;
+  const { email, password, role = "BUYER", ...rest } = req.body;
   try {
     if (!email || !password) {
-      res.status(400).json({ message: "please fill the empty fields" });
+      return res.status(400).json({ message: "Please fill the empty fields." });
     }
 
     const accountExist = await prisma.user.findFirst({
-      where: {
-        email,
-      },
+      where: { email },
     });
     if (accountExist) {
-      res.status(409).json({ message: "account exist" });
+      return res.status(409).json({ message: "Account already exists." });
     }
 
     const cryptedPassword = await bcrypt.hash(password, 10);
@@ -25,15 +23,17 @@ const register = async (req, res) => {
       data: {
         email,
         password: cryptedPassword,
+        role,
         ...rest,
       },
     });
 
     res
       .status(201)
-      .json({ message: "account created successfully", acountCreated });
+      .json({ message: "Account created successfully", acountCreated });
   } catch (error) {
-    res.status(500).json({ message: error });
+    console.error("Error creating account:", error);
+    res.status(500).json({ message: error.message });
   }
 };
 
