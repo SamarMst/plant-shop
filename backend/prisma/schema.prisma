@@ -20,6 +20,7 @@ model User {
   role     Role   @default(BUYER)
 
   userInfo  UserInfo?
+  
   userImage String?
 
   plant Plant[]
@@ -42,7 +43,8 @@ model UserInfo {
 model PlantCategory {
   id     Int     @id @default(autoincrement())
   name   String  @unique
-  plants Plant[]
+  plants PlantCategoriesOnPlants[]
+
 }
 
 enum PlantType {
@@ -58,13 +60,24 @@ model Plant {
   price    Float
   quantity Int       @default(0)
   stock    Boolean   @default(false)
+  plantImage String?
 
   User   User? @relation(fields: [userId], references: [id])
   userId Int?
 
-  plantCategory   PlantCategory? @relation(fields: [plantCategoryId], references: [id])
-  plantCategoryId Int?
+  categories      PlantCategoriesOnPlants[] 
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PlantCategoriesOnPlants {
+  plantId        Int
+  plant          Plant            @relation(fields: [plantId], references: [id])
+
+  plantCategoryId Int
+  plantCategory   PlantCategory    @relation(fields: [plantCategoryId], references: [id])
+
+  @@id([plantId, plantCategoryId])
 }

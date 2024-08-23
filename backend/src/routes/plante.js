@@ -1,8 +1,7 @@
 const router = require("express").Router();
 
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const { imageMulterConfig } = require("../config/multer");
 
 const {
   createPlant,
@@ -17,8 +16,14 @@ const {
 } = require("../controller/plante");
 
 const authenticateToken = require("../middleware/authenticate");
-
-router.post("/", authenticateToken, createPlant);
+const validatePlant = require("../Validation/plant");
+router.post(
+  "/",
+  authenticateToken,
+  multer(imageMulterConfig).single("file"),
+  validatePlant,
+  createPlant
+);
 
 router.get("/", getAllPlants);
 
