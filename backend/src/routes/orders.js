@@ -6,7 +6,6 @@ const {
   getSoldPlantsHistory,
   getBoughtPlantsHistory,
 } = require("../controller/orders");
-const jwt = require("jsonwebtoken");
 const authenticateToken = require("../middleware/authenticate");
 
 router.post("/", authenticateToken, createOrder);
