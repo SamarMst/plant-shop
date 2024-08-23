@@ -4,16 +4,17 @@ const prisma = new PrismaClient();
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
   const categoryIdsArray = typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
+  console.log("🚀 ~ createPlant ~ categoryIdsArray:",typeof categoryIdsArray)
   const userId = req.user.id;
   const file = req.file;
   const userRole = req.user.role;
 
-  if (userRole !== "SELLER") {
-    return res.status(403).json({ message: "Only sellers can create plants." });
-  }
 
   try {
-
+    if (userRole !== "SELLER") {
+      return res.status(403).json({ message: "Only sellers can create plants." });
+    }
+  
 
     const existingPlant = await prisma.plant.findFirst({ where: { name } });
     if (existingPlant) {
