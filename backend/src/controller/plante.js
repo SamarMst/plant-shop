@@ -4,6 +4,12 @@ const prisma = new PrismaClient();
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, stock, plantCategoryId } = req.body;
   const userId = req.user.id;
+  const userRole = req.user.role;
+
+  if (userRole !== "SELLER") {
+    return res.status(403).json({ message: "Only sellers can create plants." });
+  }
+
   try {
     if (!name || price <= 0) {
       return res
@@ -43,6 +49,7 @@ const getAllPlants = async (req, res) => {
           select: {
             id: true,
             email: true,
+            role: true,
           },
         },
       },
