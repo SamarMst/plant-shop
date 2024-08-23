@@ -10,10 +10,12 @@ app.use(express.urlencoded({ extended: true }));
 const planteRouter = require("./routes/plante");
 const authRouter = require("./routes/auth");
 const orderRoutes = require("./routes/orders");
+const categoryRouter = require("./routes/category");
 
 app.use("/plante", planteRouter);
 app.use("/auth", authRouter);
 app.use("/orders", orderRoutes);
+app.use("/category", categoryRouter);
 
 const PORT = process.env.PORT;
 
