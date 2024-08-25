@@ -102,75 +102,7 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-const getSoldPlantsHistory = async (req, res) => {
-  const sellerId = req.user.id;
-  if (req.user.role !== "SELLER") {
-    return res.status(403).json({ message: "Access denied. Sellers only." });
-  }
-
-  try {
-    const soldOrders = await prisma.order.findMany({
-      where: {
-        sellerId: sellerId,
-        status: "ACCEPTED",
-      },
-      include: {
-        plant: true,
-        buyer: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    res.status(200).json(soldOrders);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error." });
-  }
-};
-
-const getBoughtPlantsHistory = async (req, res) => {
-  const buyerId = req.user.id;
-  if (req.user.role !== "BUYER") {
-    return res.status(403).json({ message: "Access denied. Buyers only." });
-  }
-
-  try {
-    const boughtOrders = await prisma.order.findMany({
-      where: {
-        buyerId: buyerId,
-        status: "ACCEPTED",
-      },
-      include: {
-        plant: true,
-        seller: {
-          select: {
-            id: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    res.status(200).json(boughtOrders);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error." });
-  }
-};
-
 module.exports = {
   createOrder,
   updateOrderStatus,
-  getSoldPlantsHistory,
-  getBoughtPlantsHistory,
 };

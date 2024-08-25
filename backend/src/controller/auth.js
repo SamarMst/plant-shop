@@ -19,7 +19,7 @@ const register = async (req, res) => {
 
     const cryptedPassword = await bcrypt.hash(password, 10);
 
-    const acountCreated = await prisma.user.create({
+    const accountCreated = await prisma.user.create({
       data: {
         email,
         password: cryptedPassword,
@@ -28,9 +28,7 @@ const register = async (req, res) => {
       },
     });
 
-    res
-      .status(201)
-      .json({ message: "Account created successfully", acountCreated });
+    res.status(201).json({ message: "Account created successfully" });
   } catch (error) {
     console.error("Error creating account:", error);
     res.status(500).json({ message: error.message });
@@ -63,10 +61,11 @@ const login = async (req, res) => {
         expiresIn: "1d",
       }
     );
-    res
-      .status(200)
-      .json({ ...accountExist, password: undefined, token: accessToken });
-  } catch (error) {}
+    res.status(200).json({ token: accessToken });
+  } catch (error) {
+    console.error("Error creating account:", error);
+    res.status(500).json({ message: error.message });
+  }
 };
 
 module.exports = { register, login };
