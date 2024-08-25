@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const createOrder = async (req, res) => {
   const { plantId, quantity } = req.body;
-  const buyerId = req.user.id;
+  const userId = req.user.id;
 
   try {
     if (!quantity || quantity <= 0) {
@@ -15,7 +15,7 @@ const createOrder = async (req, res) => {
       return res.status(404).json({ message: "Plant not found." });
     }
 
-    if (plant.userId === buyerId) {
+    if (plant.userId === userId) {
       return res
         .status(400)
         .json({ message: "You cannot buy your own plant." });
@@ -28,8 +28,7 @@ const createOrder = async (req, res) => {
     const order = await prisma.order.create({
       data: {
         plantId,
-        buyerId,
-        sellerId: plant.userId,
+        userId,
         quantity,
       },
     });
@@ -49,18 +48,22 @@ const createOrder = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   const { orderId, status } = req.body;
   const sellerId = req.user.id;
+
   if (!["ACCEPTED", "REFUSED"].includes(status)) {
     return res.status(400).json({ message: "Invalid status." });
   }
 
   try {
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { plant: true },
+    });
 
     if (!order) {
       return res.status(404).json({ message: "Order not found." });
     }
 
-    if (order.sellerId !== sellerId) {
+    if (order.plant.userId !== sellerId) {
       return res
         .status(403)
         .json({ message: "You are not authorized to update this order." });
@@ -78,13 +81,10 @@ const updateOrderStatus = async (req, res) => {
     });
 
     if (status === "ACCEPTED") {
-      const plant = await prisma.plant.findUnique({
-        where: { id: order.plantId },
-      });
-      const updatedQuantity = plant.quantity - 1;
+      const updatedQuantity = order.plant.quantity - order.quantity;
 
       await prisma.plant.update({
-        where: { id: plant.id },
+        where: { id: order.plantId },
         data: {
           quantity: updatedQuantity,
           stock: updatedQuantity > 0,
@@ -97,7 +97,7 @@ const updateOrderStatus = async (req, res) => {
       order: updatedOrder,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating order status:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
