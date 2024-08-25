@@ -3,18 +3,19 @@ const prisma = new PrismaClient();
 
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
-  const categoryIdsArray = typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
-  console.log("🚀 ~ createPlant ~ categoryIdsArray:",typeof categoryIdsArray)
+  const categoryIdsArray =
+    typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
+  console.log("🚀 ~ createPlant ~ categoryIdsArray:", typeof categoryIdsArray);
   const userId = req.user.id;
   const file = req.file;
   const userRole = req.user.role;
 
-
   try {
     if (userRole !== "SELLER") {
-      return res.status(403).json({ message: "Only sellers can create plants." });
+      return res
+        .status(403)
+        .json({ message: "Only sellers can create plants." });
     }
-  
 
     const existingPlant = await prisma.plant.findFirst({ where: { name } });
     if (existingPlant) {
@@ -30,11 +31,11 @@ const createPlant = async (req, res) => {
         price: parseFloat(price),
         quantity: parseInt(quantity),
         stock: newStockStatus,
-        plantImage: file?.filename, 
+        plantImage: file?.filename,
         userId,
         //User: { connect: { id: userId } },
         categories: {
-          create: categoryIdsArray.map(id => ({
+          create: categoryIdsArray.map((id) => ({
             plantCategory: { connect: { id } },
           })),
         },
@@ -43,11 +44,10 @@ const createPlant = async (req, res) => {
 
     res.status(201).json(newPlant);
   } catch (error) {
-    console.error("Error creating plant:", error); 
+    console.error("Error creating plant:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
-
 
 const getAllPlants = async (req, res) => {
   try {
@@ -66,20 +66,21 @@ const getAllPlants = async (req, res) => {
               select: {
                 id: true,
                 name: true,
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
     });
 
     res.status(200).json(plants);
   } catch (error) {
     console.log("Error retrieving plants:", error);
-    res.status(500).json({ message: "An error occurred while retrieving plants." });
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving plants." });
   }
 };
-
 
 const getMyOwnPlants = async (req, res) => {
   try {
@@ -183,6 +184,11 @@ const restockPlantById = async (req, res) => {
   const userId = req.user.id;
 
   try {
+    if (quantity <= 0) {
+      return res
+        .status(400)
+        .json({ message: "Quantity must be greater than zero." });
+    }
     const plant = await prisma.plant.findFirst({
       where: { id: parseInt(plantId), userId },
     });

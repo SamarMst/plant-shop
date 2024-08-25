@@ -39,12 +39,34 @@ CREATE TABLE `Plant` (
     `price` DOUBLE NOT NULL,
     `quantity` INTEGER NOT NULL DEFAULT 0,
     `stock` BOOLEAN NOT NULL DEFAULT false,
+    `plantImage` VARCHAR(191) NULL,
     `userId` INTEGER NULL,
-    `plantCategoryId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Plant_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `PlantCategoriesOnPlants` (
+    `plantId` INTEGER NOT NULL,
+    `plantCategoryId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`plantId`, `plantCategoryId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Order` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `plantId` INTEGER NOT NULL,
+    `quantity` INTEGER NOT NULL,
+    `buyerId` INTEGER NOT NULL,
+    `sellerId` INTEGER NOT NULL,
+    `status` ENUM('PENDING', 'ACCEPTED', 'REFUSED') NOT NULL DEFAULT 'PENDING',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -55,4 +77,16 @@ ALTER TABLE `UserInfo` ADD CONSTRAINT `UserInfo_userId_fkey` FOREIGN KEY (`userI
 ALTER TABLE `Plant` ADD CONSTRAINT `Plant_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Plant` ADD CONSTRAINT `Plant_plantCategoryId_fkey` FOREIGN KEY (`plantCategoryId`) REFERENCES `PlantCategory`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `PlantCategoriesOnPlants` ADD CONSTRAINT `PlantCategoriesOnPlants_plantId_fkey` FOREIGN KEY (`plantId`) REFERENCES `Plant`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `PlantCategoriesOnPlants` ADD CONSTRAINT `PlantCategoriesOnPlants_plantCategoryId_fkey` FOREIGN KEY (`plantCategoryId`) REFERENCES `PlantCategory`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Order` ADD CONSTRAINT `Order_plantId_fkey` FOREIGN KEY (`plantId`) REFERENCES `Plant`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Order` ADD CONSTRAINT `Order_buyerId_fkey` FOREIGN KEY (`buyerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Order` ADD CONSTRAINT `Order_sellerId_fkey` FOREIGN KEY (`sellerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
