@@ -8,19 +8,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const authenticateToken = require("./middleware/authenticate");
-const planteRouter = require("./routes/plante");
-const authRouter = require("./routes/auth");
-const orderRoutes = require("./routes/orders");
-const categoryRouter = require("./routes/category");
-const historyRouter = require("./routes/history");
-
-app.use("/auth", authRouter);
-
-app.use("/plante", planteRouter);
-app.use("/orders", authenticateToken, orderRoutes);
-app.use("/category", categoryRouter);
-app.use("/history", authenticateToken, historyRouter);
+const routes = require('./routes');
+app.use('/', routes);
 
 app.use(express.static("public/images"));
 
