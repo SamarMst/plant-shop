@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { getPlantsHistory } = require("../controller/history");
+const { getHistory } = require("../controller/history");
 
-router.get("/", getPlantsHistory);
+router.get("/", getHistory);
 
 module.exports = router;

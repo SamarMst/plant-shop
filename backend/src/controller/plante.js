@@ -53,7 +53,7 @@ const getAllPlants = async (req, res) => {
   try {
     const plants = await prisma.plant.findMany({
       include: {
-        User: {
+        user: {
           select: {
             id: true,
             email: true,
