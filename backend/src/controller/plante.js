@@ -4,8 +4,7 @@ const prisma = new PrismaClient();
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
   const categoryIdsArray =
-    typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
-  console.log("🚀 ~ createPlant ~ categoryIdsArray:", typeof categoryIdsArray);
+        typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
   const userId = req.user.id;
   const file = req.file;
   const userRole = req.user.role;
@@ -21,6 +20,17 @@ const createPlant = async (req, res) => {
     if (existingPlant) {
       return res.status(409).json({ message: "Plant already exists." });
     }
+
+    // const nonDuplicatedIds = new Set(categoryIdsArray);
+    // const categoriesIds = Array.from(nonDuplicatedIds);
+    // console.log("🚀 ~ createPlant ~ categoriesIds:",typeof arr)
+
+    categoryIdsArray.map(async(id) => {
+        const existCategories = await prisma.plantCategory.findFirst({
+       where: { id },
+     });
+      if (!existCategories) return res.status(400).json({ message: "Category doesnt'n exists." });
+    });
 
     const newStockStatus = quantity > 0;
 
@@ -44,7 +54,7 @@ const createPlant = async (req, res) => {
 
     res.status(201).json(newPlant);
   } catch (error) {
-    console.error("Error creating plant:", error);
+    //console.error("Error creating plant:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
