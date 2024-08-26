@@ -5,13 +5,13 @@ function App() {
   const [plants, setPlants] = useState([]);
   async function fetchPlants() {
     const result = await axios.get("http://localhost:4000/plante");
-   
+
     setPlants(result.data);
   }
   useEffect(() => {
-    fetchPlants()
-  },[]);
-  
+    fetchPlants();
+  }, []);
+
   return (
     <div className="flex flex-wrap gap-4  min-h-screen p-4 ">
       {plants.map((plant) => (
