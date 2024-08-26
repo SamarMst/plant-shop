@@ -88,8 +88,8 @@ model PlantCategoriesOnPlants {
   plantId         Int
   plantCategoryId Int
 
-  plant         Plant         @relation(fields: [plantId], references: [id])
-  plantCategory PlantCategory @relation(fields: [plantCategoryId], references: [id])
+  plant         Plant?         @relation(fields: [plantId], references: [id])
+  plantCategory PlantCategory? @relation(fields: [plantCategoryId], references: [id])
 
   @@id([plantId, plantCategoryId])
 }

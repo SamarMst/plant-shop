@@ -10,6 +10,7 @@ const {
   getMyOwnPlants,
   updatePlantById,
   deletePlantById,
+  deleteAllPlant,
   getPlantsInStock,
   getPlantsOutOfStock,
   restockPlantById,
@@ -37,6 +38,7 @@ router.get("/:id", getPlantById);
 
 router.put("/:id", authenticateToken, updatePlantById);
 
+router.delete("/", authenticateToken, deleteAllPlant);
 router.delete("/:id", authenticateToken, deletePlantById);
 
 router.put(
