@@ -16,7 +16,7 @@ const {
 } = require("../controller/plante");
 
 const authenticateToken = require("../middleware/authenticate");
-const validatePlant = require("../Validation/plant");
+const { validatePlant, validateRestockPlant } = require("../Validation/plant");
 router.post(
   "/",
   authenticateToken,
@@ -42,6 +42,7 @@ router.delete("/:id", authenticateToken, deletePlantById);
 router.put(
   "/restock/:id/quantity/:quantity",
   authenticateToken,
+  validateRestockPlant,
   restockPlantById
 );
 

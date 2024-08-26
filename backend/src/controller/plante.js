@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const yup = require("yup");
 
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
@@ -182,13 +183,15 @@ const restockPlantById = async (req, res) => {
   const plantId = req.params.id;
   const quantity = req.params.quantity;
   const userId = req.user.id;
+  const role = req.user.role;
 
   try {
-    if (quantity <= 0) {
+    if (role !== "SELLER") {
       return res
         .status(400)
-        .json({ message: "Quantity must be greater than zero." });
+        .json({ message: "Only the seller can restock the plant ." });
     }
+
     const plant = await prisma.plant.findFirst({
       where: { id: parseInt(plantId), userId },
     });
@@ -207,6 +210,7 @@ const restockPlantById = async (req, res) => {
       .status(200)
       .json({ message: "Plant restocked successfully.", plant: updatedPlant });
   } catch (error) {
+    console.log("🚀 ~ restockPlantById ~ error:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
