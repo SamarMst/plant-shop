@@ -1,22 +1,24 @@
 import { Link } from "react-router-dom";
 import Logo from "./logo";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Menu, Search, ShoppingCart, User } from "lucide-react";
 const Navbar = () => {
   return (
-    <nav className="flex justify-between w-full ">
+    <nav className="flex justify-between md:justify-around items-center py-4 w-full ">
       <Logo />
 
-      <div className="flex gap-2 text-[#21441f]">
+      <div className="hidden md:flex gap-4 text-2xl text-[#21441f]">
         <Link to="/">Home</Link>
         <Link to="shop">Shop</Link>
         <Link to="contact">Contact</Link>
       </div>
-      
-      <div className="flex">
+
+      <div className="hidden md:flex">
         <Search />
         <ShoppingCart />
         <User />
       </div>
+
+      <Menu className="block md:hidden" />
     </nav>
   );
 };
