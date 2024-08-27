@@ -5,7 +5,7 @@ const yup = require("yup");
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
   const categoryIdsArray =
-        typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
+    typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
   const userId = req.user.id;
   const file = req.file;
   const userRole = req.user.role;
@@ -26,11 +26,12 @@ const createPlant = async (req, res) => {
     // const categoriesIds = Array.from(nonDuplicatedIds);
     // console.log("🚀 ~ createPlant ~ categoriesIds:",typeof arr)
 
-    categoryIdsArray.map(async(id) => {
-        const existCategories = await prisma.plantCategory.findFirst({
-       where: { id },
-     });
-      if (!existCategories) return res.status(400).json({ message: "Category doesnt'n exists." });
+    categoryIdsArray.map(async (id) => {
+      const existCategories = await prisma.plantCategory.findFirst({
+        where: { id },
+      });
+      if (!existCategories)
+        return res.status(400).json({ message: "Category doesnt'n exists." });
     });
 
     const newStockStatus = quantity > 0;
@@ -155,16 +156,34 @@ const deletePlantById = async (req, res) => {
   try {
     const plant = await prisma.plant.findFirst({
       where: { id: parseInt(plantId), userId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            role: true,
+          },
+        },
+        categories: true,
+      },
     });
 
     if (!plant) {
       return res.status(404).json({ message: "Plant not found." });
     }
+    await prisma.plantCategoriesOnPlants.delete({
+      where: {
+        plantId_plantCategoryId: {
+          plantId: plant.id,
+          plantCategoryId: plant.categories[0].plantCategoryId,
+        },
+      },
+    });
 
     await prisma.plant.delete({ where: { id: parseInt(plantId) } });
-
     res.status(200).json({ message: "Plant deleted successfully." });
   } catch (error) {
+    console.log("🚀 ~ deletePlantById ~ error:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
@@ -236,6 +255,17 @@ const findPlantById = async (plantId) => {
     include: { plantCategory: true },
   });
 };
+const deleteAllPlant = async (req, res) => {
+  try {
+    await prisma.plantCategoriesOnPlants.deleteMany();
+
+    await prisma.plant.deleteMany();
+
+    res.status(200).json({ message: "All plants deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
 
 module.exports = {
   createPlant,
@@ -246,5 +276,6 @@ module.exports = {
   deletePlantById,
   getPlantsInStock,
   getPlantsOutOfStock,
+  deleteAllPlant,
   restockPlantById,
 };
