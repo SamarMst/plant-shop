@@ -18,17 +18,21 @@ function Home() {
     <div className="flex flex-col gap-4 min-h-screen p-4 w-full ">
       <Navbar />
       <Hero />
-      <div className="md:px-40 flex flex-col 
-        md:flex-row items-center md:flex-wrap gap-4">
-        {plants && plants.map((plant) => (
-          <PlantCard
-            key={plant.id}
-            name={plant.name}
-            type={plant.type}
-            price={plant.price}
-            plantImage={plant.plantImage}
-          />
-        ))}
+      <div
+        className="md:px-40 flex flex-col 
+        md:flex-row items-center md:flex-wrap gap-4"
+      >
+        {plants &&
+          plants.map((plant) => (
+            <PlantCard
+              id={plant.id}
+              key={plant.id}
+              name={plant.name}
+              type={plant.type}
+              price={plant.price}
+              plantImage={plant.plantImage}
+            />
+          ))}
       </div>
     </div>
   );

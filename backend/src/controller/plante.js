@@ -112,12 +112,13 @@ const getPlantById = async (req, res) => {
   const plantId = req.params.id;
   try {
     const plant = await findPlantById(plantId);
+    console.log("hello", plant);
     if (!plant) {
       return res.status(404).json({ message: "Plant not found." });
     }
     res.status(200).json(plant);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({ message: "Internal server error.", error });
   }
 };
 
@@ -252,7 +253,13 @@ const findPlantsByStockStatus = async (req, stockStatus) => {
 const findPlantById = async (plantId) => {
   return await prisma.plant.findFirst({
     where: { id: parseInt(plantId) },
-    include: { plantCategory: true },
+    include: {
+      categories: {
+        include: {
+          plantCategory: true,
+        },
+      },
+    },
   });
 };
 const deleteAllPlant = async (req, res) => {
