@@ -1,6 +1,14 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import PlantButton from "./plant-button";
 
-const PlantCard = ({ id, name, type, price, plantImage }) => {
+const PlantesCard = ({ id, name, type, price, plantImage }) => {
   return (
     <div className="p-4 flex flex-col items-start shadow-lg rounded-xl w-80">
       <img
@@ -16,4 +24,4 @@ const PlantCard = ({ id, name, type, price, plantImage }) => {
   );
 };
 
-export default PlantCard;
+export default PlantesCard;
