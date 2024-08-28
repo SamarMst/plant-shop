@@ -26,11 +26,11 @@ function Plant() {
   }
 
   useEffect(() => {
-    fetchPlant(); // Fetch the single plant based on the ID
-    fetchPlants(); // Fetch all plants
-  }, [id]); // Re-fetch plant if the ID changes
+    fetchPlant();
+    fetchPlants();
+  }, [id]);
 
-  if (!plant) return <div>Loading...</div>; // Display a loading state while the plant is being fetched
+  if (!plant) return <div>Loading...</div>;
 
   return (
     <div>
@@ -55,9 +55,9 @@ function Plant() {
       >
         {plants &&
           plants.map((plant) => (
-            <PlantsCard // Fixed typo
+            <PlantsCard
               key={plant.id}
-              id={plant.id} // Pass id to PlantsCard if needed
+              id={plant.id}
               name={plant.name}
               type={plant.type}
               price={plant.price}
