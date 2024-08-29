@@ -61,6 +61,14 @@ enum PlantType {
   OUTDOOR
 }
 
+model Resources {
+  id       Int    @id @default(autoincrement())
+  filename String
+  type     String
+  plantId  Int?
+  Plant    Plant? @relation(fields: [plantId], references: [id])
+}
+
 model Plant {
   id Int @id @default(autoincrement())
 
@@ -69,15 +77,13 @@ model Plant {
   price      Float
   quantity   Int       @default(0)
   stock      Boolean   @default(false)
-  plantImage String?
-
   user   User? @relation("UserPlants", fields: [userId], references: [id])
   userId Int?
 
   categories PlantCategoriesOnPlants[]
 
-  orders Order[]
-
+  orders    Order[]
+  resources Resources[]
   histories History[]
 
   createdAt DateTime @default(now())

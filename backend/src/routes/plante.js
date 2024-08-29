@@ -21,7 +21,7 @@ const { validatePlant, validateRestockPlant } = require("../Validation/plant");
 router.post(
   "/",
   authenticateToken,
-  multer(imageMulterConfig).single("file"),
+  multer(imageMulterConfig).array('files', 10),
   validatePlant,
   createPlant
 );

@@ -4,17 +4,14 @@ const yup = require("yup");
 
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
-  const categoryIdsArray =
-    typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
+  const categoryIdsArray = typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
   const userId = req.user.id;
-  const file = req.file;
+  const files = req.files || []; 
   const userRole = req.user.role;
 
   try {
     if (userRole !== "SELLER") {
-      return res
-        .status(403)
-        .json({ message: "Only sellers can create plants." });
+      return res.status(403).json({ message: "Only sellers can create plants." });
     }
 
     const existingPlant = await prisma.plant.findFirst({ where: { name } });
@@ -22,17 +19,16 @@ const createPlant = async (req, res) => {
       return res.status(409).json({ message: "Plant already exists." });
     }
 
-    // const nonDuplicatedIds = new Set(categoryIdsArray);
-    // const categoriesIds = Array.from(nonDuplicatedIds);
-    // console.log("🚀 ~ createPlant ~ categoriesIds:",typeof arr)
+    const categoryChecks = categoryIdsArray.map(id =>
+      prisma.plantCategory.findFirst({ where: { id } })
+    );
 
-    categoryIdsArray.map(async (id) => {
-      const existCategories = await prisma.plantCategory.findFirst({
-        where: { id },
-      });
-      if (!existCategories)
-        return res.status(400).json({ message: "Category doesnt'n exists." });
-    });
+    const existingCategories = await Promise.all(categoryChecks);
+    const invalidCategoryIds = categoryIdsArray.filter((id, index) => !existingCategories[index]);
+
+    if (invalidCategoryIds.length > 0) {
+      return res.status(400).json({ message: `Categories with ids ${invalidCategoryIds.join(', ')} do not exist.` });
+    }
 
     const newStockStatus = quantity > 0;
 
@@ -41,25 +37,35 @@ const createPlant = async (req, res) => {
         name,
         type,
         price: parseFloat(price),
-        quantity: parseInt(quantity),
+        quantity: parseInt(quantity, 10),
         stock: newStockStatus,
-        plantImage: file?.filename,
         userId,
-        //User: { connect: { id: userId } },
         categories: {
-          create: categoryIdsArray.map((id) => ({
+          create: categoryIdsArray.map(id => ({
             plantCategory: { connect: { id } },
           })),
         },
       },
     });
 
+ 
+    await Promise.all(files.map(file =>
+      prisma.resources.create({
+        data: {
+          plantId: newPlant.id,
+          filename: file.filename,
+          type: file.mimetype,
+        },
+      })
+    ));
+
     res.status(201).json(newPlant);
   } catch (error) {
-    //console.error("Error creating plant:", error);
+    console.error("Error creating plant:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };
+
 
 const getAllPlants = async (req, res) => {
   try {
@@ -80,6 +86,11 @@ const getAllPlants = async (req, res) => {
                 name: true,
               },
             },
+          },
+        },
+        resources: {
+          select: {
+            filename: true,
           },
         },
       },
