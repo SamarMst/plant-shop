@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Navbar from "../../components/nav-bar";
 import Hero from "./components/hero";
+import Logo from "@/components/logo";
 function Home() {
   const [plants, setPlants] = useState([]);
   async function fetchPlants() {
@@ -15,7 +16,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 min-h-screen p-4 w-full ">
+    <div className="flex flex-col gap-4 min-h-screen w-full ">
       <Navbar />
       <Hero />
       <div
@@ -34,6 +35,11 @@ function Home() {
             />
           ))}
       </div>
+      <footer className="flex flex-row justify-between items-center px-6 py-4 border-t-2 shadow-md">
+        <Logo />
+        <p>Copyright 2024</p>
+        <p>samar002ms@gmail.com</p>
+      </footer>
     </div>
   );
 }
