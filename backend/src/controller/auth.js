@@ -7,7 +7,9 @@ const register = async (req, res) => {
   const { email, password, role = "BUYER", ...rest } = req.body;
   try {
     if (!email || !password) {
-      return res.status(400).json({ message: "Please fill the empty fields." });
+      return res
+        .status(400)
+        .json({ message: "Please fill the empty fields.!!!!" });
     }
 
     const accountExist = await prisma.user.findFirst({
@@ -23,7 +25,7 @@ const register = async (req, res) => {
       data: {
         email,
         password: cryptedPassword,
-        role,
+        role: role.toUpperCase(),
         ...rest,
       },
     });
