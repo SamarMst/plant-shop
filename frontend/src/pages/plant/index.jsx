@@ -12,10 +12,15 @@ function Plant() {
   const [plant, setPlant] = useState(null);
   const [plants, setPlants] = useState([]);
   const [mainImage, setMainImage] = useState("");
+  const token = localStorage.getItem("authToken");
 
   async function fetchPlant() {
     try {
-      const result = await axios.get(`http://localhost:4000/plante/${id}`);
+      const result = await axios.get(`http://localhost:4000/plante/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPlant(result.data);
       setMainImage(result.data.resources[0]?.filename || "");
     } catch (error) {
