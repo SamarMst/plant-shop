@@ -5,7 +5,8 @@ const yup = require("yup");
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
   const categoryIdsArray =
-    typeof categoryIds === "string" ? JSON.parse(categoryIds) : categoryIds;
+    typeof categoryIds === "string" ? categoryIds.split(",") : categoryIds;
+
   const userId = req.user.id;
   const files = req.files || [];
   const userRole = req.user.role;
@@ -23,7 +24,7 @@ const createPlant = async (req, res) => {
     }
 
     const categoryChecks = categoryIdsArray.map((id) =>
-      prisma.plantCategory.findFirst({ where: { id } })
+      prisma.plantCategory.findFirst({ where: { id: parseInt(id) } })
     );
 
     const existingCategories = await Promise.all(categoryChecks);
@@ -51,7 +52,7 @@ const createPlant = async (req, res) => {
         userId,
         categories: {
           create: categoryIdsArray.map((id) => ({
-            plantCategory: { connect: { id } },
+            plantCategory: { connect: { id: parseInt(id) } },
           })),
         },
       },
@@ -69,7 +70,7 @@ const createPlant = async (req, res) => {
       )
     );
 
-    res.status(201).json(newPlant);
+    res.status(201).json({ message: "Plant created successfully" });
   } catch (error) {
     console.error("Error creating plant:", error);
     res.status(500).json({ message: "Internal server error." });
@@ -167,6 +168,7 @@ const getPlantById = async (req, res) => {
 };
 
 const updatePlantById = async (req, res) => {
+  console.log("object");
   const plantId = req.params.id;
   const userId = req.user.id;
   const { name, type, price, quantity } = req.body;
@@ -179,11 +181,14 @@ const updatePlantById = async (req, res) => {
       return res.status(404).json({ message: "Plant not found." });
     }
 
+    console.log(quantity);
     if (quantity > 0) {
       stock = true;
     } else {
       stock = false;
     }
+
+    console.log(stock);
 
     const updatedPlant = await prisma.plant.update({
       where: { id: parseInt(plantId) },
@@ -191,6 +196,7 @@ const updatePlantById = async (req, res) => {
     });
     res.status(200).json(updatedPlant);
   } catch (error) {
+    console.log("🚀 ~ updatePlantById ~ error:", error);
     res.status(500).json({ message: "Internal server error." });
   }
 };

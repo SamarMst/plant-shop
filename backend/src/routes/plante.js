@@ -21,7 +21,7 @@ const { validatePlant, validateRestockPlant } = require("../Validation/plant");
 router.post(
   "/",
   authenticateToken,
-  multer(imageMulterConfig).array('files', 10),
+  multer(imageMulterConfig).array("files", 10),
   validatePlant,
   createPlant
 );
@@ -36,8 +36,6 @@ router.get("/notinstock", authenticateToken, getPlantsOutOfStock);
 
 router.get("/:id", getPlantById);
 
-router.put("/:id", authenticateToken, updatePlantById);
-
 router.delete("/", authenticateToken, deleteAllPlant);
 router.delete("/:id", authenticateToken, deletePlantById);
 
@@ -47,5 +45,6 @@ router.put(
   validateRestockPlant,
   restockPlantById
 );
+router.put("/:id", authenticateToken, validatePlant, updatePlantById);
 
 module.exports = router;

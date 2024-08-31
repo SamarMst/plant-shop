@@ -20,7 +20,7 @@ function Login() {
       });
       const { token } = response.data;
       localStorage.setItem("authToken", token);
-      navigate("/seller");
+      navigate("/dashboard");
     } catch (error) {
       setError("Invalid credentials. Please try again.");
       console.error("Login error:", error);

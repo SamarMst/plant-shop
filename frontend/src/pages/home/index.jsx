@@ -4,25 +4,29 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/nav-bar";
 import Hero from "./components/hero";
 import Logo from "@/components/logo";
+
 function Home() {
   const [plants, setPlants] = useState([]);
-  async function fetchPlants() {
-    const result = await axios.get("http://localhost:4000/plante");
 
-    setPlants(result.data);
+  async function fetchPlants() {
+    try {
+      const result = await axios.get("http://localhost:4000/plante");
+      setPlants(result.data);
+      console.log(result.data);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+    }
   }
+
   useEffect(() => {
     fetchPlants();
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 min-h-screen w-full ">
+    <div className="flex flex-col gap-4 min-h-screen w-full">
       <Navbar />
       <Hero />
-      <div
-        className="md:px-40 flex flex-col 
-        md:flex-row items-center md:flex-wrap gap-4"
-      >
+      <div className="md:px-40 flex flex-col md:flex-row items-center md:flex-wrap gap-4">
         {plants &&
           plants.map((plant) => (
             <PlantCard
@@ -31,7 +35,7 @@ function Home() {
               name={plant.name}
               type={plant.type}
               price={plant.price}
-              plantImage={plant.plantImage}
+              plantImage={plant.resources[0]?.filename}
             />
           ))}
       </div>
