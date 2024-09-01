@@ -19,7 +19,7 @@ const UpdatePlant = ({
   type = "INDOOR",
   price,
   quantity,
-  category = [], // Default to empty array
+  category = [],
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [plantName, setPlantName] = useState(name);

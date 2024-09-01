@@ -168,7 +168,6 @@ const getPlantById = async (req, res) => {
 };
 
 const updatePlantById = async (req, res) => {
-  console.log("object");
   const plantId = req.params.id;
   const userId = req.user.id;
   const { name, type, price, quantity } = req.body;
@@ -180,19 +179,21 @@ const updatePlantById = async (req, res) => {
     if (!plant) {
       return res.status(404).json({ message: "Plant not found." });
     }
-
-    console.log(quantity);
     if (quantity > 0) {
       stock = true;
     } else {
       stock = false;
     }
 
-    console.log(stock);
-
     const updatedPlant = await prisma.plant.update({
       where: { id: parseInt(plantId) },
-      data: { name, type, price, quantity, stock },
+      data: {
+        name,
+        type,
+        price: parseFloat(price),
+        quantity: parseInt(quantity),
+        stock,
+      },
     });
     res.status(200).json(updatedPlant);
   } catch (error) {
