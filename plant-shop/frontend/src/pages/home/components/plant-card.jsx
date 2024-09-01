@@ -13,7 +13,6 @@ const PlantCard = ({
   plantImage,
 }) => {
   const { role } = useGetUserInfo();
-  console.log(category);
   return (
     <div className="p-4 flex flex-col items-start shadow-lg rounded-xl w-80">
       <img

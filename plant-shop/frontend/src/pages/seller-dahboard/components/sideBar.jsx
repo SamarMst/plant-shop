@@ -1,10 +1,11 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { routes } from "./route";
-import { Library, Layers3, LogOut } from "lucide-react";
+import { Layers3, LogOut } from "lucide-react";
 
 const Sidebar = () => {
   const [openRoute, setOpenRoute] = useState(null);
+  const navigate = useNavigate();
 
   const toggleMenu = (path) => {
     setOpenRoute(openRoute === path ? null : path);
