@@ -1,9 +1,9 @@
-import useFetchPlantInStock from "@/hook/useFetchPlantInStock";
+import useFetchPlantsNotInStock from "@/hook/useFetchPlantsNotInStock";
 import PlantCard from "@/pages/home/components/plant-card";
 import Toast from "react-hot-toast";
 
-const GetPlantsInStock = () => {
-  const { plants, error } = useFetchPlantInStock();
+const GetPlantsNotInStock = () => {
+  const { plants, error } = useFetchPlantsNotInStock();
 
   if (error) {
     Toast.error(error);
@@ -29,10 +29,10 @@ const GetPlantsInStock = () => {
         ) : (
           <div className="m-28 p-4 bg-white rounded-lg shadow-lg max-w-md mx-auto">
             <h2 className="text-center text-xl font-semibold text-gray-800 mb-2">
-              No Plants in Stock
+              No Plants in not Stock
             </h2>
             <p className="text-center text-base text-gray-600">
-              It looks like there are no plants in stock available at the
+              It looks like there are no plants not in stock available at the
               moment.
             </p>
           </div>
@@ -42,4 +42,4 @@ const GetPlantsInStock = () => {
   );
 };
 
-export default GetPlantsInStock;
+export default GetPlantsNotInStock;
