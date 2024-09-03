@@ -2,6 +2,7 @@ import useGetUserInfo from "@/hook/useGetUserInfo";
 import PlantButton from "./plant-button";
 import UpdatePlant from "@/pages/seller-dahboard/components/update-plant";
 import DeletePlant from "@/pages/seller-dahboard/components/delete-plant";
+import { useNavigate } from "react-router-dom";
 
 const PlantCard = ({
   id,
@@ -13,6 +14,7 @@ const PlantCard = ({
   plantImage,
 }) => {
   const { role } = useGetUserInfo();
+  const navigate = useNavigate();
 
   return (
     <div className="p-4 flex flex-col items-start shadow-lg rounded-xl w-80">
@@ -40,7 +42,7 @@ const PlantCard = ({
           <DeletePlant id={id} />
         </div>
       ) : (
-        <PlantButton name="Shop Now" />
+        <PlantButton id={id} name="Shop Now" />
       )}
     </div>
   );

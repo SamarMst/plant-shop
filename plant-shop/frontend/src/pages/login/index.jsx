@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/nav-bar";
 import { useNavigate } from "react-router-dom";
+import useGetUserInfo from "@/hook/useGetUserInfo";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,10 @@ function Login() {
       });
       const { token } = response.data;
       localStorage.setItem("authToken", token);
-      navigate("/dashboard/plants");
+      const { role } = useGetUserInfo();
+      {
+        role === "SELLER" ? navigate("/dashboard/plants") : navigate("/");
+      }
     } catch (error) {
       setError("Invalid credentials. Please try again.");
       console.error("Login error:", error);
