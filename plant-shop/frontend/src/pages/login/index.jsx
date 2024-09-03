@@ -9,6 +9,9 @@ function Login() {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const handleRegisterClick = () => {
+    navigate("/register");
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -118,6 +121,7 @@ function Login() {
                           <button
                             type="button"
                             className="inline-block rounded border-2 border-red-500 px-6 py-2 text-xs font-medium uppercase leading-normal text-red-500 transition duration-150 ease-in-out hover:bg-red-500 hover:text-white focus:border-red-600 focus:text-red-600 focus:outline-none focus:ring-0 active:border-red-700 active:text-red-700"
+                            onClick={handleRegisterClick}
                           >
                             Register
                           </button>
