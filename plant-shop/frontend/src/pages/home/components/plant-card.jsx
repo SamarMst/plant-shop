@@ -1,7 +1,7 @@
 import useGetUserInfo from "@/hook/useGetUserInfo";
 import PlantButton from "./plant-button";
-import { Button } from "@/components/ui/button";
 import UpdatePlant from "@/pages/seller-dahboard/components/update-plant";
+import DeletePlant from "@/pages/seller-dahboard/components/delete-plant";
 
 const PlantCard = ({
   id,
@@ -13,6 +13,7 @@ const PlantCard = ({
   plantImage,
 }) => {
   const { role } = useGetUserInfo();
+
   return (
     <div className="p-4 flex flex-col items-start shadow-lg rounded-xl w-80">
       <img
@@ -22,6 +23,7 @@ const PlantCard = ({
       />
       <h1 className="capitalize text-4xl font-bold">{name}</h1>
       <p className="text-xs text-gray-400">{type}</p>
+      <p className="text-xs text-gray-400">{id}</p>
       <p className="font-bold">{price} TND</p>
 
       {role === "SELLER" ? (
@@ -33,10 +35,9 @@ const PlantCard = ({
             price={price}
             quantity={quantity}
             category={category}
+            plantImage={plantImage}
           />
-          <Button variant="destructive" className="w-full">
-            Delete
-          </Button>
+          <DeletePlant id={id} />
         </div>
       ) : (
         <PlantButton name="Shop Now" />

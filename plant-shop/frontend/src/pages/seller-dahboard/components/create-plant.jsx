@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios-instance";
+import { useNavigate } from "react-router-dom";
+
 function CreatePlant() {
   const [plantName, setPlantName] = useState("");
   const [quantity, setQuantity] = useState("");

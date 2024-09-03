@@ -29,7 +29,7 @@ const UpdatePlant = ({
   const [plantCategory, setPlantCategory] = useState([]);
 
   useEffect(() => {
-    if (category) {
+    if (category && plantCategory.length !== category.length) {
       setPlantCategory(category.map((item) => item.plantCategory.id));
     }
   }, [category]);

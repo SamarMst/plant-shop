@@ -18,11 +18,11 @@ export const routes = [
     label: "Plants",
     icon: Library,
     subRoutes: [
-      // { path: "/", label: "Dashboard", icon: LayoutDashboard },
+      { path: "/", label: "Dashboard", icon: LayoutDashboard },
       { path: "/create", label: "Create Plant", icon: PackagePlus },
-      { path: "plants/update/id", label: "Update Plant", icon: PackageSearch },
-      { path: "/delete", label: "Delete Plant", icon: PackageX },
-      { path: "/byId", label: "Get Plants By Id", icon: ScanBarcode },
+      /* { path: "plants/update/id", label: "Update Plant", icon: PackageSearch },
+      { path: "/delete", label: "Delete Plant", icon: PackageX }, */
+      { path: "/byId", label: "Get Plant By Id", icon: ScanBarcode },
       { path: "/stocks", label: "Get Stock", icon: Layers },
       { path: "/notinstock", label: "Get Not In Stock", icon: Layers2 },
       { path: "/restock", label: "Restock Plant", icon: Layers3 },
