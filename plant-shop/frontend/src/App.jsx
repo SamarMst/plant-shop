@@ -12,6 +12,7 @@ import GetPlantById from "./pages/seller-dahboard/components/get-plant-by-id";
 import GetMyPlants from "./pages/seller-dahboard/components/get-my-plant";
 import Category from "./pages/seller-dahboard/components/category";
 import GetPlantsInStock from "./pages/seller-dahboard/components/get-in-stock";
+import GetPlantsNotInStock from "./pages/seller-dahboard/components/get-not-in-stock";
 
 function App() {
   const router = createBrowserRouter([
@@ -25,7 +26,8 @@ function App() {
       children: [
         { path: "plants/create", element: <CreatePlant /> },
         { path: "plants/update/id", element: <UpdatePlant /> },
-        { path: "plants/stocks", element: <GetPlantsInStock /> },
+        { path: "plants/stock", element: <GetPlantsInStock /> },
+        { path: "plants/notinstock", element: <GetPlantsNotInStock /> },
         { path: "plants/delete", element: <DeletePlant /> },
         { path: "plants/byId", element: <GetPlantById /> },
         { path: "plants", element: <GetMyPlants /> },
