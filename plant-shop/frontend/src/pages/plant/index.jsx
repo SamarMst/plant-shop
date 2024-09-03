@@ -44,8 +44,8 @@ function Plant() {
   return (
     <div className="flex flex-col gap-12 min-h-screen p-4">
       <Navbar />
-      <div className="flex flex-col md:flex-row p-4 items-start">
-        <div className="w-full md:w-2/3 flex justify-center items-center p-4">
+      <div className="flex flex-col md:flex-row p-10 items-start">
+        <div className="w-full md:w-2/3 flex justify-center items-center p-6">
           <img
             src={`http://localhost:4000/${mainImage}`}
             alt={plant.name}
@@ -59,7 +59,12 @@ function Plant() {
           <p>
             This is a lovely {plant.type} plant perfect for your home or office.
           </p>
-          <Button variant="orderShop">Order now</Button>
+          <Button
+            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700"
+            variant="orderShop"
+          >
+            Order now
+          </Button>
           <div className="flex flex-col gap-4">
             {plant.resources.map((resource, index) => (
               <img
