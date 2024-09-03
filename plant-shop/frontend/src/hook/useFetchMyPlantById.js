@@ -7,7 +7,7 @@ const useFetchMyPlantById = (plantId) => {
 
   useEffect(() => {
     const fetchPlant = async () => {
-      if (!plantId) return; // Skip fetching if plantId is null or empty
+      if (!plantId) return;
 
       try {
         const response = await axios.get(
