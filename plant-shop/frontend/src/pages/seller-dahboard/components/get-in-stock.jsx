@@ -4,11 +4,16 @@ import Toast from "react-hot-toast";
 
 const GetPlantsInStock = () => {
   const { plants, error } = useFetchPlantInStock();
-  if (error) return Toast.error(error);
+
+  if (error) {
+    Toast.error(error);
+    return null;
+  }
+
   return (
-    <div className=" min-h-screen w-full max-w-2xl mx-auto">
-      <div className=" flex flex-col md:flex-row items-center md:flex-wrap gap-4">
-        {plants &&
+    <div className="min-h-screen w-full max-w-2xl mx-auto">
+      <div className="flex flex-col md:flex-row items-center md:flex-wrap gap-4">
+        {plants && plants.length > 0 ? (
           plants.map((plant) => (
             <PlantCard
               id={plant.id}
@@ -18,9 +23,12 @@ const GetPlantsInStock = () => {
               price={plant.price}
               quantity={plant.quantity}
               category={plant.categories}
-              plantImage={plant.resources[0]?.filename}
+              plantImage={plant.resources?.[0]?.filename}
             />
-          ))}
+          ))
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );

@@ -33,7 +33,7 @@ const GetPlantById = () => {
           name={plant.name}
           type={plant.type}
           price={plant.price}
-          plantImage={plant.resources?.[0]?.filename}
+          plantImage={plant.resources?.[0].filename}
         />
       )}
     </div>
