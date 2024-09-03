@@ -5,7 +5,6 @@ import { Layers3, LogOut } from "lucide-react";
 
 const Sidebar = () => {
   const [openRoute, setOpenRoute] = useState(null);
-  const navigate = useNavigate();
 
   const toggleMenu = (path) => {
     setOpenRoute(openRoute === path ? null : path);
