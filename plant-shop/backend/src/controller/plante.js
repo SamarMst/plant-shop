@@ -152,9 +152,12 @@ const getMyOwnPlants = async (req, res) => {
       .json({ message: "An error occurred while retrieving your plants." });
   }
 };
-
 const getPlantById = async (req, res) => {
   const plantId = parseInt(req.params.id);
+  if (isNaN(plantId)) {
+    return res.status(400).json({ message: "Invalid plant ID." });
+  }
+
   try {
     const plant = await findPlantById(plantId);
     if (!plant) {
@@ -298,7 +301,33 @@ const restockPlantById = async (req, res) => {
 
 const findPlantsByStockStatus = async (req, stockStatus) => {
   const userId = req.user.id;
-  return await prisma.plant.findMany({ where: { stock: stockStatus, userId } });
+  return await prisma.plant.findMany({
+    where: { stock: stockStatus, userId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          role: true,
+        },
+      },
+      categories: {
+        select: {
+          plantCategory: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+      resources: {
+        select: {
+          filename: true,
+        },
+      },
+    },
+  });
 };
 const findPlantById = async (plantId) => {
   return await prisma.plant.findUnique({

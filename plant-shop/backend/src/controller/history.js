@@ -12,7 +12,9 @@ const getHistory = async (req, res) => {
           plant: {
             userId: userId,
           },
-          status: "ACCEPTED",
+          status: {
+            in: ["ACCEPTED", "REFUSED"],
+          },
         },
         include: {
           plant: true,
@@ -59,6 +61,66 @@ const getHistory = async (req, res) => {
   }
 };
 
+const getPendingOrders = async (req, res) => {
+  const userId = req.user.id;
+  const userRole = req.user.role;
+
+  try {
+    if (userRole === "SELLER") {
+      const pendingOrders = await prisma.order.findMany({
+        where: {
+          plant: {
+            userId: userId,
+          },
+          status: "PENDING",
+        },
+        include: {
+          plant: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      res.status(200).json({
+        message: "Pending orders for the SELLER",
+        data: pendingOrders,
+      });
+    } else if (userRole === "BUYER") {
+      // Get pending orders placed by the buyer
+      const pendingOrders = await prisma.order.findMany({
+        where: {
+          userId: userId,
+          status: "PENDING",
+        },
+        include: {
+          plant: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      res.status(200).json({
+        message: "Pending orders for the BUYER",
+        data: pendingOrders,
+      });
+    } else {
+      res.status(403).json({ message: "Unauthorized access." });
+    }
+  } catch (error) {
+    console.error("Error fetching pending orders:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
 module.exports = {
+  getPendingOrders,
   getHistory,
 };
