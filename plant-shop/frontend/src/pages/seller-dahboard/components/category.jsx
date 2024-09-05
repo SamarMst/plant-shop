@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import Toast from "react-hot-toast";
+import axiosInstance from "@/lib/axios-instance";
 
 const Category = () => {
   const [category, setCategory] = useState([]);
@@ -22,7 +23,7 @@ const Category = () => {
 
   async function createNewCategory() {
     try {
-      const result = await axios.post(
+      const result = await axiosInstance.post(
         "http://localhost:4000/category",
         {
           name: newCategory,
@@ -40,6 +41,7 @@ const Category = () => {
       Toast.error(error.response.data.message);
     }
   }
+
   async function fetchCategory() {
     try {
       const result = await axios.get(
@@ -59,19 +61,22 @@ const Category = () => {
   useEffect(() => {
     fetchCategory();
   }, []);
+
   return (
-    <div className=" container p-10 space-y-6">
-      <div className="flex gap-2">
-        <Input type="search" placeholder="Search category" />
+    <div className="container p-10 space-y-6">
+      <div className="flex gap-2 mb-4">
+        <Input type="search" placeholder="Search category" className="w-1/3" />
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>New category</Button>
+            <Button className="bg-green-500 hover:bg-green-600">
+              New category
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Create Category</DialogTitle>
               <DialogDescription>
-                Fill the form to create new category. Click save when you're
+                Fill the form to create a new category. Click save when you're
                 done.
               </DialogDescription>
             </DialogHeader>
@@ -88,39 +93,52 @@ const Category = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" onClick={createNewCategory}>
+              <Button
+                type="submit"
+                onClick={createNewCategory}
+                className="bg-blue-500 hover:bg-blue-600"
+              >
                 Save changes
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
-      <table className="min-w-full bg-white border border-gray-200 rounded-xl shadow-md">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
-              Name
-            </th>
-            <th className="text-left py-3 px-4 uppercase font-semibold text-sm">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {category.map((item) => (
-            <tr
-              key={item.id}
-              className="border-t border-gray-200 hover:bg-gray-100"
-            >
-              <td className="py-3 px-4">{item.name}</td>
-              <td className="py-3 px-4 space-x-4">
-                <Button>Edit</Button>
-                <Button variant="destructive">Delete</Button>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="max-w-xl w-full bg-white border border-gray-200 rounded-xl shadow-md">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="text-left py-3 px-6 uppercase font-semibold text-sm">
+                Name
+              </th>
+              <th className="text-right py-3 px-14 uppercase font-semibold text-sm">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {category.map((item) => (
+              <tr
+                key={item.id}
+                className="border-t border-gray-200 hover:bg-gray-100"
+              >
+                <td className="py-3 px-6">{item.name}</td>
+                <td className="py-3 px-6 text-right space-x-2">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600">
+                    Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="bg-red-500 hover:bg-red-600"
+                  >
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

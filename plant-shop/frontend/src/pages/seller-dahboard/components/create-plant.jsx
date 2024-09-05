@@ -1,77 +1,85 @@
-import React, { useState } from "react";
-import axiosInstance from "@/lib/axios-instance";
 import {
   Card,
   CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
+import { useState } from "react";
+import Select from "react-select";
+import { useDropzone } from "react-dropzone";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
+import axiosInstance from "@/lib/axios-instance";
 
-const RestockMyPlant = () => {
-  const [plantId, setPlantId] = useState("");
+function CreatePlant() {
+  const [plantName, setPlantName] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [type, setType] = useState("INDOOR");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState([]);
+  const [images, setImages] = useState([]);
 
-  const handleRestock = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/jpeg, image/png",
+    onDrop: (acceptedFiles) => {
+      setImages(acceptedFiles);
+    },
+  });
 
-    const plantIdNumber = parseInt(plantId, 10);
-    const quantityNumber = parseInt(quantity, 10);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("name", plantName);
+    formData.append("quantity", quantity);
+    formData.append("type", type);
+    formData.append("price", price);
+    formData.append("categoryIds", category);
 
-    if (isNaN(plantIdNumber) || plantIdNumber <= 0) {
-      setMessage("Plant ID must be a positive integer.");
-      setLoading(false);
-      return;
-    }
-
-    if (isNaN(quantityNumber) || quantityNumber <= 0) {
-      setMessage("Quantity must be an integer greater than 0.");
-      setLoading(false);
-      return;
-    }
-
+    images.map((file) => {
+      formData.append("files", file);
+    });
     try {
-      const response = await axiosInstance.put(
-        `/plante/restock/${plantIdNumber}/quantity/${quantityNumber}`
-      );
-      setMessage(response.data.message);
-      setPlantId("");
+      const result = await axiosInstance.post(`/plante`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success(result.data.message);
+      setPlantName("");
+      setCategory("");
       setQuantity("");
+      setType("");
+      setPrice("");
+      setCategory([]);
+      setImages([]);
     } catch (error) {
-      setMessage(
-        error.response ? error.response.data.message : "An error occurred."
-      );
-    } finally {
-      setLoading(false);
+      toast.error(error.response.data.message);
     }
   };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Restock Plant</CardTitle>
+        <CardTitle>Create Plant</CardTitle>
         <CardDescription>
-          Provide the plant ID and quantity to restock.
+          Fill in the details to add a new plant.{" "}
         </CardDescription>
       </CardHeader>
-      <form onSubmit={handleRestock} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {" "}
         <CardContent>
           <div className="grid gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="plantId">Plant ID</Label>
+              <Label htmlFor="name">Name</Label>{" "}
               <Input
-                id="plantId"
-                type="text"
-                placeholder="Enter plant ID"
-                value={plantId}
-                onChange={(e) => setPlantId(e.target.value)}
+                id="name"
+                placeholder="Name of the plant"
+                value={plantName}
+                onChange={(e) => setPlantName(e.target.value)}
               />
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -79,32 +87,71 @@ const RestockMyPlant = () => {
               <Input
                 id="quantity"
                 type="number"
-                placeholder="Enter quantity"
+                placeholder="Quantity"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
               />
-              {message && <p className="text-red-500 text-sm">{message}</p>}
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="type">Type</Label>
+              <Select
+                options={[
+                  { value: "INDOOR", label: "Indoor" },
+                  { value: "OUTDOOR", label: "Outdoor" },
+                ]}
+                placeholder="Select type"
+                onChange={(option) => setType(option?.value)}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="price">Price</Label>
+              <Input
+                id="price"
+                type="number"
+                placeholder="Price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="category">Category</Label>
+              <Input
+                id="category"
+                placeholder="Category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="images">Images</Label>
+              <div
+                {...getRootProps()}
+                className="border border-dashed border-gray-300 p-4 text-center"
+              >
+                <input {...getInputProps()} />
+                <p>Drag & drop some images here, or click to select images</p>
+              </div>
+              {images.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {images.map((image, index) => (
+                    <img
+                      key={index}
+                      src={URL.createObjectURL(image)}
+                      alt={`Preview ${index}`}
+                      className="w-24 h-24 object-cover"
+                    />
+                  ))}
+                </div>
+              )}{" "}
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => {
-              setPlantId("");
-              setQuantity("");
-            }}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={loading}>
-            {loading ? "Restocking..." : "Restock Plant"}
-          </Button>
+          <Button variant="outline">Cancel</Button>
+          <Button type="submit">Save Plant</Button>{" "}
         </CardFooter>
       </form>
     </Card>
   );
-};
-
-export default RestockMyPlant;
+}
+export default CreatePlant;
