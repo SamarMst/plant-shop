@@ -55,7 +55,7 @@ const updateOrderStatus = async (req, res) => {
 
   try {
     const order = await prisma.order.findUnique({
-      where: { id: orderId },
+      where: { id: parseInt(orderId) },
       include: { plant: true },
     });
 
@@ -76,7 +76,7 @@ const updateOrderStatus = async (req, res) => {
     }
 
     const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
+      where: { id: parseInt(orderId) },
       data: { status },
     });
 
