@@ -17,7 +17,6 @@ const Navbar = () => {
         <Link to="login">
           <User />
         </Link>
-        <UserCog />
       </div>
 
       <Menu className="block md:hidden" />

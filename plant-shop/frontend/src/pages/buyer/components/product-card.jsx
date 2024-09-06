@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 
 const PlantCard = ({ plant, onProceedClick }) => {
+  // Accept onProceedClick as prop
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(plant.price);
 
@@ -32,18 +34,17 @@ const PlantCard = ({ plant, onProceedClick }) => {
           <label htmlFor="quantity" className="mr-2 text-sm font-medium">
             Quantity:
           </label>
-          <input
+          <Input
             id="quantity"
             type="number"
+            placeholder="Quantity"
             value={quantity}
             onChange={handleQuantityChange}
-            className="border border-gray-300 rounded-md p-1 w-16"
-            min="1"
           />
         </div>
         <Button
           className="mt-4 bg-green-500 text-white py-2 px-3 rounded hover:bg-green-700"
-          onClick={onProceedClick}
+          onClick={onProceedClick} // Use the callback
         >
           Procéder
         </Button>

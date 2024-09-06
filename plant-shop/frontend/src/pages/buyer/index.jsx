@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
-import PlantCard from "./components/product-card"; // Your PlantCard component
+import { toast } from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/nav-bar";
+import axiosInstance from "@/lib/axios-instance";
+import PlantCard from "./components/product-card";
 
 const BuyPlant = () => {
   const [plant, setPlant] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [address, setAddress] = useState("");
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   const query = new URLSearchParams(useLocation().search);
   const plantId = query.get("id");
   const token = localStorage.getItem("authToken");
@@ -25,7 +30,7 @@ const BuyPlant = () => {
   useEffect(() => {
     async function fetchPlant() {
       try {
-        const result = await axios.get(
+        const result = await axiosInstance.get(
           `http://localhost:4000/plante/${plantId}`,
           {
             headers: {
@@ -40,10 +45,43 @@ const BuyPlant = () => {
     }
 
     fetchPlant();
-  }, [plantId]);
+  }, [plantId, token]);
 
   const handleProceedClick = () => {
     setShowForm(true);
+  };
+
+  const handleCancelClick = () => {
+    setShowForm(false);
+  };
+
+  const handleQuantityChange = (quantity) => {
+    setSelectedQuantity(parseInt(quantity));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const requestData = {
+      plantId,
+      quantity: selectedQuantity,
+    };
+
+    console.log("Request Data:", requestData);
+
+    try {
+      const result = await axiosInstance.post(`/orders`, requestData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(result.data.message);
+      setName("");
+      setLastName("");
+      setAddress("");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   if (!plant) return <div>Loading...</div>;
@@ -53,9 +91,13 @@ const BuyPlant = () => {
       <Navbar />
       <div className="flex gap-12 p-4 max-w-5xl my-20 mx-auto">
         <div className="flex-shrink-0 w-1/2">
-          <PlantCard plant={plant} onProceedClick={handleProceedClick} />
+          <PlantCard
+            plant={plant}
+            onProceedClick={handleProceedClick}
+            showProceed={!showForm}
+            onQuantityChange={handleQuantityChange}
+          />
         </div>
-
         {showForm && (
           <div className="flex-grow w-1/2">
             <Card className="w-full max-w-2xl mx-auto">
@@ -65,29 +107,40 @@ const BuyPlant = () => {
                   Fill in your details to proceed.
                 </CardDescription>
               </CardHeader>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <CardContent>
                   <div className="grid gap-4">
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="name">Name</Label>
-                      <Input id="name" placeholder="Your name" />
+                      <Input
+                        id="name"
+                        placeholder="Your name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </div>
                     <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="lastName">lastName</Label>
-                      <Input id="lastName" type="text" placeholder="lastName" />
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input
+                        id="lastName"
+                        placeholder="Your Last Name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
                     </div>
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="address">Address</Label>
-                      <Input id="address" placeholder="Your address" />
-                    </div>
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="age">Age</Label>
-                      <Input id="age" type="number" placeholder="age" />
+                      <Input
+                        id="address"
+                        placeholder="Your address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                      />
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button variant="outline" onClick={() => setShowForm(false)}>
+                  <Button variant="outline" onClick={handleCancelClick}>
                     Cancel
                   </Button>
                   <Button type="submit">Submit Order</Button>
