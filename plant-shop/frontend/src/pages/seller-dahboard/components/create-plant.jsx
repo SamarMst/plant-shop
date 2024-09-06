@@ -70,7 +70,6 @@ function CreatePlant() {
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {" "}
         <CardContent>
           <div className="grid gap-4">
             <div className="flex flex-col space-y-1.5">

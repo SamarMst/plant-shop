@@ -17,12 +17,13 @@ import { Toaster } from "react-hot-toast";
 import Orders from "./pages/seller-dahboard/components/orders";
 import History from "./pages/seller-dahboard/components/history";
 import BuyPlant from "./pages/buyer";
+import DashboarBuyer from "./pages/buyer/components/dashboard";
 
 function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Home /> },
     { path: "/plant/:id", element: <Plant /> },
-    { path: "/buy", element: <BuyPlant /> },
+    { path: "/buy", element: <DashboarBuyer /> },
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Login /> },
     {
