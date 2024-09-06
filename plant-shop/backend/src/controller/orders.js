@@ -6,11 +6,14 @@ const createOrder = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    if (!quantity || quantity <= 0) {
+    const parsedQuantity = parseInt(quantity);
+    if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
       return res.status(400).json({ message: "Invalid quantity." });
     }
 
-    const plant = await prisma.plant.findUnique({ where: { id: plantId } });
+    const plant = await prisma.plant.findUnique({
+      where: { id: parseInt(plantId) },
+    });
     if (!plant) {
       return res.status(404).json({ message: "Plant not found." });
     }
@@ -27,14 +30,14 @@ const createOrder = async (req, res) => {
 
     const order = await prisma.order.create({
       data: {
-        plantId,
+        plantId: parseInt(plantId),
         userId,
-        quantity,
+        quantity: parseInt(quantity),
       },
     });
 
     await prisma.plant.update({
-      where: { id: plantId },
+      where: { id: parseInt(plantId) },
       data: { quantity: plant.quantity - quantity },
     });
 
@@ -98,7 +101,9 @@ const updateOrderStatus = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating order status:", error);
-    res.status(500).json({ message: "Internal server error." });
+    res
+      .status(500)
+      .json({ message: "An error occurred while processing your request." });
   }
 };
 

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo from "./logo";
-import { Menu, Search, ShoppingCart, User } from "lucide-react";
+import { Menu, Search, ShoppingCart, User, UserCog } from "lucide-react";
 const Navbar = () => {
   return (
     <nav className="flex justify-between md:justify-around items-center py-4 w-full ">
@@ -17,6 +17,7 @@ const Navbar = () => {
         <Link to="login">
           <User />
         </Link>
+        <UserCog />
       </div>
 
       <Menu className="block md:hidden" />

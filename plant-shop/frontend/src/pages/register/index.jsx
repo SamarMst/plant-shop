@@ -23,7 +23,8 @@ function Register() {
       Toast.success(result.data.message);
       navigate("/login");
     } catch (error) {
-      Toast.error(error.response.data.message);
+      console.log("🚀 ~ handleSubmit ~ error:", error.response.data);
+      Toast.error(error.response.data);
     }
   };
   const handleLoginClick = () => {
