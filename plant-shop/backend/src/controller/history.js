@@ -35,7 +35,9 @@ const getHistory = async (req, res) => {
       const plantsBought = await prisma.order.findMany({
         where: {
           userId: userId,
-          status: "ACCEPTED",
+          status: {
+            in: ["ACCEPTED", "REFUSED"],
+          },
         },
         include: {
           plant: true,
@@ -90,7 +92,6 @@ const getPendingOrders = async (req, res) => {
         data: pendingOrders,
       });
     } else if (userRole === "BUYER") {
-      // Get pending orders placed by the buyer
       const pendingOrders = await prisma.order.findMany({
         where: {
           userId: userId,
