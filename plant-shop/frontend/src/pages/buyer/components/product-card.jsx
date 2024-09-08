@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 
 const PlantCard = ({ plant, onProceedClick }) => {
-  // Accept onProceedClick as prop
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(plant.price);
 
@@ -12,7 +11,8 @@ const PlantCard = ({ plant, onProceedClick }) => {
   }, [quantity, plant.price]);
 
   const handleQuantityChange = (event) => {
-    setQuantity(Number(event.target.value));
+    const value = Number(event.target.value);
+    setQuantity(value >= 1 ? value : 1);
   };
 
   return (
@@ -27,6 +27,9 @@ const PlantCard = ({ plant, onProceedClick }) => {
       <div className="ml-4 flex flex-col w-2/3">
         <h2 className="text-lg font-bold">{plant.name}</h2>
         <p className="text-sm text-gray-600">Type: {plant.type}</p>
+        <p className="text-sm text-gray-600">
+          Quantity Available: {plant.quantity}
+        </p>
         <p className="text-lg font-semibold text-green-600">
           ${totalPrice.toFixed(2)}
         </p>
@@ -37,14 +40,14 @@ const PlantCard = ({ plant, onProceedClick }) => {
           <Input
             id="quantity"
             type="number"
-            placeholder="Quantity"
+            min="1"
             value={quantity}
             onChange={handleQuantityChange}
           />
         </div>
         <Button
           className="mt-4 bg-green-500 text-white py-2 px-3 rounded hover:bg-green-700"
-          onClick={onProceedClick} // Use the callback
+          onClick={() => onProceedClick(quantity)}
         >
           Procéder
         </Button>
