@@ -141,13 +141,13 @@ function CreatePlant() {
                     />
                   ))}
                 </div>
-              )}{" "}
+              )}
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline">Cancel</Button>
-          <Button type="submit">Save Plant</Button>{" "}
+          <Button type="submit">Save Plant</Button>
         </CardFooter>
       </form>
     </Card>

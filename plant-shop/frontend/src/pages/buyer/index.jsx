@@ -47,7 +47,8 @@ const BuyPlant = () => {
     fetchPlant();
   }, [plantId, token]);
 
-  const handleProceedClick = () => {
+  const handleProceedClick = (quantity) => {
+    setSelectedQuantity(quantity);
     setShowForm(true);
   };
 
@@ -55,15 +56,11 @@ const BuyPlant = () => {
     setShowForm(false);
   };
 
-  const handleQuantityChange = (quantity) => {
-    setSelectedQuantity(parseInt(quantity));
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const requestData = {
       plantId,
-      quantity: selectedQuantity,
+      quantity: selectedQuantity, // Use the selected quantity here
     };
 
     console.log("Request Data:", requestData);
@@ -91,12 +88,7 @@ const BuyPlant = () => {
       <Navbar />
       <div className="flex gap-12 p-4 max-w-5xl my-20 mx-auto">
         <div className="flex-shrink-0 w-1/2">
-          <PlantCard
-            plant={plant}
-            onProceedClick={handleProceedClick}
-            showProceed={!showForm}
-            onQuantityChange={handleQuantityChange}
-          />
+          <PlantCard plant={plant} onProceedClick={handleProceedClick} />
         </div>
         {showForm && (
           <div className="flex-grow w-1/2">
