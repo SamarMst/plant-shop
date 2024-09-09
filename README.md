@@ -45,6 +45,7 @@ JWT_SECRET="your_jwt_secret"
 
 # Server port
 PORT=4000
+<<<<<<< HEAD
 ```
 
 ### Running Locally
@@ -80,3 +81,6 @@ To apply Prisma migrations:
 cd backend
 npx prisma migrate dev
 ```
+=======
+
+>>>>>>> 5dfc1dac2536c56ce165df87b8342b597b4943d2
