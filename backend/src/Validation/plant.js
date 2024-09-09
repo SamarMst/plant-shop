@@ -8,13 +8,13 @@ const plantSchema = yup.object().shape({
     .optional(),
   price: yup
     .number()
-    .positive("Price must be positive")
-    .required("Price is required"),
+    .positive("An error Price must be positive")
+    .required("An error Price is required"),
   quantity: yup
     .number()
-    .integer("Quantity must be an integer")
-    .min(0, "Quantity must be at least 0")
-    .required("Quantity is required"),
+    .integer("An error Quantity must be an integer")
+    .min(0, "An error Quantity must be at least 0")
+    .required("An error Quantity is required"),
 });
 
 const validatePlant = async (req, res, next) => {
@@ -28,10 +28,10 @@ const validatePlant = async (req, res, next) => {
 const plantRestockSchema = yup.object().shape({
   quantity: yup
     .number()
-    .integer("Quantity must be an integer")
-    .positive("Quantity must be positive")
-    .min(0, "Quantity must be at least 0")
-    .required("Quantity is required"),
+    .integer("An error Quantity must be an integer")
+    .positive("An error Quantity must be positive")
+    .min(0, "An error Quantity must be at least 0")
+    .required("An error Quantity is required"),
 });
 
 const validateRestockPlant = async (req, res, next) => {

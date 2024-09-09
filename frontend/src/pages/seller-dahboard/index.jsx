@@ -1,34 +1,27 @@
 import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom"; // Import Outlet for nested routes
+import { Outlet } from "react-router-dom";
 import Sidebar from "./components/sideBar";
+import useGetUserInfo from "@/hook/useGetUserInfo";
+import useFetchMyPlants from "@/hook/useFetchMyPlants";
+import Toast from "react-hot-toast";
 
 const SellerDashboard = () => {
-  const [sellerName, setSellerName] = useState("");
-
-  useEffect(() => {
-    // Fetch the seller's name (replace with actual fetch logic)
-    const fetchSellerName = async () => {
-      // Replace with actual API call to get seller's info
-      const name = "John Doe"; // Example name
-      setSellerName(name);
-    };
-
-    fetchSellerName();
-  }, []);
+  const { plants, error } = useFetchMyPlants();
+  if (error) return Toast.error(error);
 
   return (
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex flex-col flex-grow">
-        {/* Navbar */}
         <div className="bg-[#10b981] text-white p-4 flex justify-between items-center">
-          <div className="text-lg font-bold">Welcome, {sellerName}!</div>
-          {/* Additional navbar content like notifications or profile can go here */}
+          {plants && plants.length > 0 && (
+            <div className="text-lg font-bold">
+              Welcome, {plants[0].user.email}!
+            </div>
+          )}
         </div>
-
-        {/* Main content with Outlet */}
-        <div className="p-6 flex-grow">
-          <Outlet /> {/* Renders the nested routes */}
+        <div className="p-6 flex-grow overflow-auto">
+          <Outlet />
         </div>
       </div>
     </div>

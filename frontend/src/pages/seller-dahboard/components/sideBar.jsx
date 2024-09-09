@@ -1,15 +1,18 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { routes } from "./route";
-import { Library, Layers3, LogOut } from "lucide-react";
+import { Layers3, LogOut } from "lucide-react";
 
 const Sidebar = () => {
   const [openRoute, setOpenRoute] = useState(null);
-
+  const navigate = useNavigate();
   const toggleMenu = (path) => {
     setOpenRoute(openRoute === path ? null : path);
   };
-
+  const logOut = () => {
+    localStorage.removeItem("authToken");
+    navigate("/");
+  };
   return (
     <div className="text-white h-screen w-64 bg-[#047857] flex flex-col">
       <div className="py-5 px-6 font-bold text-lg border-b border-gray-700">
@@ -71,7 +74,10 @@ const Sidebar = () => {
         ))}
       </nav>
       <div className="p-4 border-t border-gray-700">
-        <button className="flex items-center gap-4 p-2 w-full rounded-lg hover:bg-blue-700">
+        <button
+          className="flex items-center gap-4 p-2 w-full rounded-lg hover:bg-blue-700"
+          onClick={logOut}
+        >
           <LogOut className="w-6 h-6" />
           <span>Logout</span>
         </button>
