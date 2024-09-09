@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import UserInfo from "./user-info";
 import History from "./history";
 import OrdersStatus from "./orders-status";
+import { useNavigate } from "react-router-dom";
 
 const DashboarBuyer = () => {
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showOrdersStatus, setShowOrdersStatus] = useState(false);
+  const navigate = useNavigate();
 
   const handleUserInfoClick = () => {
     setShowUserInfo(!showUserInfo);
@@ -26,6 +28,11 @@ const DashboarBuyer = () => {
     setShowOrdersStatus(!showOrdersStatus);
     setShowUserInfo(false);
     setShowHistory(false);
+  };
+
+  const logOut = () => {
+    localStorage.removeItem("authToken");
+    navigate("/");
   };
 
   return (
@@ -58,7 +65,7 @@ const DashboarBuyer = () => {
           <Button
             variant="outline"
             className="text-lg w-48 h-12 flex items-center justify-center"
-            onClick={handleOrdersStatusClick}
+            onClick={logOut}
           >
             Log Out
           </Button>
