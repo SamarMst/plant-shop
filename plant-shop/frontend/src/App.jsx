@@ -23,7 +23,8 @@ function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Home /> },
     { path: "/plant/:id", element: <Plant /> },
-    { path: "/buy", element: <DashboarBuyer /> },
+    { path: "/buy", element: <BuyPlant /> },
+    { path: "/buyer", element: <DashboarBuyer /> },
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Login /> },
     {

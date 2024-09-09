@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +26,7 @@ const BuyPlant = () => {
   const query = new URLSearchParams(useLocation().search);
   const plantId = query.get("id");
   const token = localStorage.getItem("authToken");
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchPlant() {
@@ -50,6 +51,9 @@ const BuyPlant = () => {
   const handleProceedClick = (quantity) => {
     setSelectedQuantity(quantity);
     setShowForm(true);
+    if (!token) {
+      navigate("/login");
+    }
   };
 
   const handleCancelClick = () => {
@@ -60,7 +64,7 @@ const BuyPlant = () => {
     event.preventDefault();
     const requestData = {
       plantId,
-      quantity: selectedQuantity, // Use the selected quantity here
+      quantity: selectedQuantity,
     };
 
     console.log("Request Data:", requestData);

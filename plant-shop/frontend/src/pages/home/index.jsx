@@ -12,7 +12,6 @@ function Home() {
     try {
       const result = await axios.get("http://localhost:4000/plante");
       setPlants(result.data);
-      console.log(result.data);
     } catch (error) {
       console.error("Error fetching plants:", error);
     }
