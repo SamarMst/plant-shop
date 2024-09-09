@@ -1,0 +1,16 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: plant_shop_mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  
+      MYSQL_DATABASE: plant_shop      
+    ports:
+      - "3306:3306"
+    volumes:
+    - project1_mysql_data:/var/lib/mysql
+
+volumes:
+  project1_mysql_data:
