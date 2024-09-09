@@ -1,6 +1,3 @@
-import { useState } from "react";
-import Select from "react-select";
-import { useDropzone } from "react-dropzone";
 import {
   Card,
   CardContent,
@@ -9,11 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useState } from "react";
+import Select from "react-select";
+import { useDropzone } from "react-dropzone";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import axiosInstance from "@/lib/axios-instance";
+
 function CreatePlant() {
   const [plantName, setPlantName] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -31,7 +32,6 @@ function CreatePlant() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const formData = new FormData();
     formData.append("name", plantName);
     formData.append("quantity", quantity);
@@ -42,14 +42,14 @@ function CreatePlant() {
     images.map((file) => {
       formData.append("files", file);
     });
-
     try {
       const result = await axiosInstance.post(`/plante`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      Toast.success(result.data.message);
+      toast.success(result.data.message);
+      setPlantName("");
       setCategory("");
       setQuantity("");
       setType("");
@@ -57,7 +57,7 @@ function CreatePlant() {
       setCategory([]);
       setImages([]);
     } catch (error) {
-      Toast.error(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -66,14 +66,14 @@ function CreatePlant() {
       <CardHeader>
         <CardTitle>Create Plant</CardTitle>
         <CardDescription>
-          Fill in the details to add a new plant.
+          Fill in the details to add a new plant.{" "}
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
         <CardContent>
           <div className="grid gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Name</Label>{" "}
               <Input
                 id="name"
                 placeholder="Name of the plant"
@@ -153,5 +153,4 @@ function CreatePlant() {
     </Card>
   );
 }
-
 export default CreatePlant;

@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axiosInstance from "@/lib/axios-instance";
-import { format } from "path";
 import { useEffect, useState } from "react";
 
 const UpdatePlant = ({
@@ -20,24 +19,20 @@ const UpdatePlant = ({
   type = "INDOOR",
   price,
   quantity,
-  category,
+  category = [],
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [plantName, setPlantName] = useState(name);
   const [plantType, setPlantType] = useState(type);
   const [plantPrice, setPlantPrice] = useState(price);
   const [plantQuantity, setPlantQuantity] = useState(quantity);
-  const [plantCategory, setPlantCategory] = useState("");
+  const [plantCategory, setPlantCategory] = useState([]);
 
-  console.log("🚀 ~ price:", price);
-  console.log("🚀 ~ plantPrice:", plantPrice);
   useEffect(() => {
-    setPlantCategory(
-      category.map((item) => {
-        return item.plantCategory.id;
-      })
-    );
-  }, []);
+    if (category && plantCategory.length !== category.length) {
+      setPlantCategory(category.map((item) => item.plantCategory.id));
+    }
+  }, [category]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,7 +43,7 @@ const UpdatePlant = ({
     formData.append("type", plantType);
     formData.append("price", plantPrice);
     formData.append("categoryIds", plantCategory);
-    //console.log(formData.get("price"));
+
     try {
       const result = await axiosInstance.put(`/plante/${id}`, formData);
       setIsDialogOpen(false);
@@ -56,8 +51,6 @@ const UpdatePlant = ({
       console.log("Error updating plant:", error);
     }
   };
-  console.log("🚀 ~ handleSubmit ~ price:", price);
-  console.log("🚀 ~ handleSubmit ~ price:", price);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
