@@ -28,7 +28,7 @@ const PlantCard = ({ plant, onDelete, onIncrement, onDecrement }) => {
   };
 
   return (
-    <div className="flex items-center p-4 border border-gray-300 rounded-lg shadow-sm max-w-xl ">
+    <div className="flex items-center p-4 border border-gray-300 rounded-lg shadow-sm max-w-3xl ">
       <div className="flex-shrink-0 w-1/3">
         <img
           src={`http://localhost:4000/${plant.resources[0]?.filename}`}

@@ -94,12 +94,12 @@ const CheckOut = () => {
         <Logo />
       </nav>
       <hr className="border-2 font-bold" />
-      <h1 className="ml-8 mt-20 font-semibold text-xl">
+      <h1 className="ml-24 mt-20 font-semibold text-xl">
         Plant Cart - {totalQuantity} plants
       </h1>
       <div className="flex flex-col">
-        <div className="flex space-x-10">
-          <div className="flex flex-col space-y-5 mt-8 ml-6">
+        <div className="flex space-x-44">
+          <div className="flex flex-col space-y-5 mt-8 ml-24">
             {plants.length === 0 ? (
               <p>No plants in the cart.</p>
             ) : (
@@ -118,7 +118,7 @@ const CheckOut = () => {
               ))
             )}
           </div>
-          <div className="flex flex-col border rounded-lg shadow-sm w-2/3 mt-8 ml-6 p-14">
+          <div className="flex flex-col border rounded-lg shadow-sm w-1/2 mt-8 ml-6 p-14">
             <h2 className="text-lg font-sans font-semibold pb-3">
               Discount Code
             </h2>
@@ -191,7 +191,7 @@ const CheckOut = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <hr className="border-2 font-bold mb-4" />
+            <hr className="border-2 font-bold mb-4 mt-5" />
             <div className="flex justify-between">
               <h3 className="text-lg font-sans font-bold">Total</h3>
               <h3 className="text-lg font-sans font-bold mb-4">
@@ -206,7 +206,7 @@ const CheckOut = () => {
             </Button>
           </div>
         </div>
-        <hr className="border-2 font-bold mt-8" />
+        <hr className="border-2 font-bold mt-12" />
         <h3 className="flex justify-center items-center text-xl font-serif font-bold mt-5">
           Let yourself be inspired
         </h3>
@@ -220,7 +220,7 @@ const CheckOut = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full h-20 bg-green-500 ">
+      <div className="w-full h-20  ">
         <footer className="flex flex-row justify-between items-center px-6 py-4 border-t-2 shadow-md">
           <Logo />
           <p className=" text-xl">
