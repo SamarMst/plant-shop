@@ -2,34 +2,11 @@ import React, { useState, useEffect } from "react";
 import PlantCard from "./product-card";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
+
 const CheckOut = () => {
   const [plants, setPlants] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
-
-  const handleDelete = (plantId) => {
-    const plantsString = localStorage.getItem("plant");
-    if (plantsString) {
-      const plantsArray = JSON.parse(plantsString);
-      const updatedPlants = plantsArray.filter((plant) => plant.id !== plantId);
-      localStorage.setItem("plant", JSON.stringify(updatedPlants));
-      setPlants(updatedPlants);
-    }
-  };
-
-  const handleIncrement = (plantId, newQuantity) => {
-    const updatedPlants = plants.map((plant) =>
-      plant.id === plantId ? { ...plant, count: newQuantity } : plant
-    );
-    setPlants(updatedPlants);
-  };
-
-  const handleDecrement = (plantId, newQuantity) => {
-    const updatedPlants = plants.map((plant) =>
-      plant.id === plantId ? { ...plant, count: newQuantity } : plant
-    );
-    setPlants(updatedPlants);
-  };
 
   useEffect(() => {
     function getPlants() {
@@ -54,6 +31,39 @@ const CheckOut = () => {
     }
     getPlants();
   }, []);
+
+  useEffect(() => {
+    const total = plants.reduce(
+      (sum, plant) => sum + plant.price * plant.count,
+      0
+    );
+    const quantity = plants.reduce((sum, plant) => sum + plant.count, 0);
+
+    setTotalPrice(total);
+    setTotalQuantity(quantity);
+  }, [plants]);
+
+  const handleDelete = (plantId) => {
+    const updatedPlants = plants.filter((plant) => plant.id !== plantId);
+    localStorage.setItem("plant", JSON.stringify(updatedPlants));
+    setPlants(updatedPlants);
+  };
+
+  const handleIncrement = (plantId, newQuantity) => {
+    const updatedPlants = plants.map((plant) =>
+      plant.id === plantId ? { ...plant, count: newQuantity } : plant
+    );
+    localStorage.setItem("plant", JSON.stringify(updatedPlants));
+    setPlants(updatedPlants);
+  };
+
+  const handleDecrement = (plantId, newQuantity) => {
+    const updatedPlants = plants.map((plant) =>
+      plant.id === plantId ? { ...plant, count: newQuantity } : plant
+    );
+    localStorage.setItem("plant", JSON.stringify(updatedPlants));
+    setPlants(updatedPlants);
+  };
 
   return (
     <>
@@ -84,7 +94,7 @@ const CheckOut = () => {
             ))
           )}
         </div>
-        <div className="flex flex-col p-2 border rounded-lg shadow-sm w-2/3 mt-8 ml-6 p-14">
+        <div className="flex flex-col border rounded-lg shadow-sm w-2/3 mt-8 ml-6 p-14">
           <h2 className="text-lg font-sans font-semibold pb-3">
             Discount Code
           </h2>
@@ -98,7 +108,7 @@ const CheckOut = () => {
           <hr className="border-2 font-bold mb-4" />
           <div className="flex justify-between">
             <h3 className="text-lg font-sans font-bold">Total</h3>
-            <h3 className="text-lg font-sans font-bold items-end mb-4">
+            <h3 className="text-lg font-sans font-bold mb-4">
               {totalPrice} DT
             </h3>
           </div>

@@ -42,7 +42,7 @@ const PlantCard = ({ plant, onDelete, onIncrement, onDecrement }) => {
         <p className="text-sm text-gray-600">
           Quantity Available: {plant.quantity}
         </p>
-        <p className="text-lg font-semibold text-green-600">${totalPrice}</p>
+        <p className="text-lg font-semibold text-green-600">{totalPrice} DT</p>
         <div className="flex items-center justify-between mt-2 w-full">
           <div className="flex items-center border border-gray-300 rounded-md w-auto">
             <button
@@ -53,7 +53,7 @@ const PlantCard = ({ plant, onDelete, onIncrement, onDecrement }) => {
             </button>
             <Input
               id="quantity"
-              type="number"
+              type="text"
               min="1"
               value={quantity}
               onChange={handleQuantityChange}
