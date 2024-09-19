@@ -198,7 +198,10 @@ const CheckOut = () => {
                 {totalPrice} DT
               </h3>
             </div>
-            <Button className="text-center h-11 w-full text-xl font-sans bg-black text-white border border-black rounded-md hover:bg-gray-900 hover:text-white transition-colors duration-300 mb-5">
+            <Button
+              className="text-center h-11 w-full text-xl font-sans bg-black text-white border border-black rounded-md hover:bg-gray-900 hover:text-white transition-colors duration-300 mb-5"
+              onClick={() => navigate("/payments")}
+            >
               Proceed
             </Button>
           </div>
