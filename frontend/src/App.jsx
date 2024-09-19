@@ -22,10 +22,12 @@ import HistoryOrders from "./pages/buyer/components/dashboard/history";
 import Contact from "./pages/home/contact";
 import CheckOut from "./pages/buyer/components/check-out";
 import UserInfo from "./pages/buyer/components/dashboard/user-info";
+import Payment from "./pages/buyer/components/check-out/components/payment";
 
 function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Home /> },
+    { path: "/payments", element: <Payment /> },
     { path: "/contact", element: <Contact /> },
     { path: "/plant/:id", element: <Plant /> },
     {
