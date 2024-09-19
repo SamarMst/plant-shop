@@ -14,19 +14,33 @@ import GetPlantsInStock from "./pages/seller-dahboard/components/get-in-stock";
 import GetPlantsNotInStock from "./pages/seller-dahboard/components/get-not-in-stock";
 import RestockMyPlant from "./pages/seller-dahboard/components/restock-my-plant-by-Id";
 import { Toaster } from "react-hot-toast";
-import Orders from "./pages/seller-dahboard/components/orders";
-import History from "./pages/seller-dahboard/components/history";
+import Orders from "./pages/seller-dahboard/page/orders";
+import History from "./pages/seller-dahboard/page/history";
 import BuyPlant from "./pages/buyer";
-import DashboarBuyer from "./pages/buyer/components/dashboard";
+import OrdersStatus from "./pages/buyer/components/dashboard/orders-status";
+import HistoryOrders from "./pages/buyer/components/dashboard/history";
+import Contact from "./pages/home/contact";
+import CheckOut from "./pages/buyer/components/check-out/check-out";
+import UserInfo from "./pages/buyer/components/dashboard/user-info";
 
 function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Home /> },
+    { path: "/contact", element: <Contact /> },
     { path: "/plant/:id", element: <Plant /> },
-    { path: "/buy", element: <BuyPlant /> },
-    { path: "/buyer", element: <DashboarBuyer /> },
+    {
+      path: "/buyer",
+      element: <BuyPlant />,
+      children: [
+        { path: "userInfo", element: <UserInfo /> },
+
+        { path: "ordersStatus", element: <OrdersStatus /> },
+        { path: "history", element: <HistoryOrders /> },
+      ],
+    },
     { path: "/register", element: <Register /> },
     { path: "/login", element: <Login /> },
+    { path: "/checkOut", element: <CheckOut /> },
     {
       path: "/dashboard",
       element: <SellerDashboard />,

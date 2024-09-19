@@ -9,11 +9,7 @@ const OrdersStatus = () => {
   useEffect(() => {
     const fetchOrdersStatus = async () => {
       try {
-        const result = await axiosInstance.get(`/history`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const result = await axiosInstance.get(`/history`);
         setOrdersStatus(
           result.data.data.filter((item) => item.status === "PENDING")
         );

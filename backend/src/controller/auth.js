@@ -57,7 +57,11 @@ const login = async (req, res) => {
       res.status(401).json({ message: "Incorrect password" });
     }
     const accessToken = jwt.sign(
-      { id: accountExist.id, role: accountExist.role },
+      {
+        id: accountExist.id,
+        role: accountExist.role,
+        email: accountExist.email,
+      },
       process.env.ACCESS_TOKEN_SECRET,
       {
         expiresIn: "1d",
