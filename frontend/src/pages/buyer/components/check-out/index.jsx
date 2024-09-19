@@ -12,6 +12,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import GetInspired from "./components/get-inspired";
+import { useNavigate } from "react-router-dom";
 
 const CheckOut = () => {
   const [plants, setPlants] = useState([]);
@@ -20,6 +22,7 @@ const CheckOut = () => {
   const [isDialogGiftCardOpen, setIsDialogGiftCardOpen] = useState(false);
   const [isDialogDiscountCodeOpen, setIsDialogDiscountCodeOpen] =
     useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function getPlants() {
@@ -204,6 +207,21 @@ const CheckOut = () => {
         <h3 className="flex justify-center items-center text-xl font-serif font-bold mt-5">
           Let yourself be inspired
         </h3>
+        <div className="flex flex-col justify-center items-center mt-6 mb-14">
+          <GetInspired />
+          <Button
+            className="text-center mt-8 mb-8 h-11 w-96 text-xl font-sans bg-white text-black border border-black rounded-md hover:bg-black hover:text-white transition-colors duration-300"
+            onClick={() => navigate("/")}
+          >
+            Back to the store
+          </Button>
+        </div>
+      </div>
+      <div className="w-full h-20 bg-green-500 ">
+        <p className="text-white text-xl text-center pt-6">
+          &copy; {new Date().getFullYear()} samar002ms@gmail.com . All rights
+          reserved.
+        </p>
       </div>
     </>
   );
