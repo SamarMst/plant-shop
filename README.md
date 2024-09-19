@@ -8,7 +8,7 @@ PlantShop is a full-stack web application designed to manage and sell plants onl
 ## Technologies Used
 - Frontend: React, Tailwind CSS
 - Backend: Node.js, Express
-- Database: Prisma (MySQL)
+- Database: MySQL (Prisma)
 - Containerization: Docker
 - Authentication: JWT (JSON Web Token)
 - Validation: Yup
