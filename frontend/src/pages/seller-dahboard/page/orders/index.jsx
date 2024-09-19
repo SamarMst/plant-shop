@@ -155,7 +155,7 @@ const Orders = () => {
               <td className="py-3 px-4">{item.id}</td>
               <td className="py-3 px-4">{item.plantId}</td>
               <td className="py-3 px-4">{item.quantity}</td>
-              <td className="py-3 px-4">{item.status}</td>
+              <td className="py-3 px-4 ">{item.status}</td>
               <td className="py-3 px-4 text-right">
                 <div className="flex justify-end space-x-2">
                   <Button

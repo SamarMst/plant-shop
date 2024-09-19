@@ -38,15 +38,11 @@ const UserInfo = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosInstance.post(
-        `/user/${id}/info`,
-        { name, lastname: lastName, age },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axiosInstance.post(`/user/${id}/info`, {
+        name,
+        lastname: lastName,
+        age,
+      });
       Toast.success("User info updated successfully.");
     } catch (error) {
       Toast.error("Failed to update user info.");
@@ -55,7 +51,7 @@ const UserInfo = () => {
 
   return (
     <>
-      <div className="flex-grow ml-4 p-4 border border-black rounded-lg bg-white">
+      <div className="flex-grow p-4 border border-black rounded-lg bg-white">
         <h3 className="text-xl font-bold mb-2">Your personal details </h3>
         <div className="text-sm text-gray-700">
           <form onSubmit={handleSubmit}>

@@ -1,16 +1,16 @@
 import PlantCard from "./components/plant-card";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Navbar from "../../components/nav-bar";
 import Hero from "./components/hero";
 import Logo from "@/components/logo";
+import axiosInstance from "@/lib/axios-instance";
 
 function Home() {
   const [plants, setPlants] = useState([]);
 
   async function fetchPlants() {
     try {
-      const result = await axios.get("http://localhost:4000/plante");
+      const result = await axiosInstance.get("http://localhost:4000/plante");
       setPlants(result.data);
     } catch (error) {
       console.error("Error fetching plants:", error);

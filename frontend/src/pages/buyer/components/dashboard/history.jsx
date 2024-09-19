@@ -2,18 +2,13 @@ import axiosInstance from "@/lib/axios-instance";
 import { useEffect, useState } from "react";
 import Toast from "react-hot-toast";
 
-const History = () => {
+const HistoryOrders = () => {
   const [boughtPlants, setBoughtPlants] = useState([]);
-  const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     const fetchBoughtPlants = async () => {
       try {
-        const result = await axiosInstance.get(`/history`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const result = await axiosInstance.get(`/history`);
         setBoughtPlants(
           result.data.data.filter((item) => item.status === "ACCEPTED")
         );
@@ -23,7 +18,7 @@ const History = () => {
     };
 
     fetchBoughtPlants();
-  }, [token]);
+  }, []);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -98,4 +93,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default HistoryOrders;

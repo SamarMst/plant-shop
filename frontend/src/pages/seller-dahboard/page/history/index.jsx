@@ -9,11 +9,7 @@ const History = () => {
   useEffect(() => {
     const fetchSoldPlants = async () => {
       try {
-        const result = await axiosInstance.get(`/history`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const result = await axiosInstance.get(`/history`);
         setSoldPlants(result.data.data);
       } catch (error) {
         Toast.error("Failed to fetch sold plants.");

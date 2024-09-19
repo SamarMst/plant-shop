@@ -22,6 +22,7 @@ const getHistory = async (req, res) => {
             select: {
               id: true,
               email: true,
+              role: true,
             },
           },
         },
