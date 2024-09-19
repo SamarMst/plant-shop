@@ -21,16 +21,11 @@ const Orders = () => {
   const [orderId, setOrderId] = useState("");
   const [orders, setOrders] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     const fetchPendingOrders = async () => {
       try {
-        const result = await axiosInstance.get(`/history/pendings`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const result = await axiosInstance.get(`/history/pendings`);
         setOrders(result.data.data);
       } catch (error) {
         Toast.error("Failed to fetch pending orders.");
@@ -38,7 +33,7 @@ const Orders = () => {
     };
 
     fetchPendingOrders();
-  }, [token]);
+  });
 
   const updateOrderStatus = async () => {
     try {
@@ -47,20 +42,11 @@ const Orders = () => {
         {
           orderId,
           status,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
       Toast.success(result.data.message);
       setIsDialogOpen(false);
-      const updatedOrders = await axiosInstance.get(`/history/pendings`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const updatedOrders = await axiosInstance.get(`/history/pendings`);
       setOrders(updatedOrders.data.data);
     } catch (error) {
       Toast.error(error.response.data.message);
