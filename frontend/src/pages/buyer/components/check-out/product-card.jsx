@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const PlantCard = ({ plant, onDelete }) => {
+const PlantCard = ({ plant, onDelete, onIncrement, onDecrement }) => {
   const [quantity, setQuantity] = useState(plant.count || 1);
   const [totalPrice, setTotalPrice] = useState(plant.price * quantity);
 
@@ -16,11 +16,15 @@ const PlantCard = ({ plant, onDelete }) => {
   };
 
   const incrementQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    onIncrement(plant.id, newQuantity);
   };
 
   const decrementQuantity = () => {
-    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+    const newQuantity = quantity > 1 ? quantity - 1 : 1;
+    setQuantity(newQuantity);
+    onDecrement(plant.id, newQuantity);
   };
 
   return (
