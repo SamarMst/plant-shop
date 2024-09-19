@@ -20,7 +20,7 @@ import BuyPlant from "./pages/buyer";
 import OrdersStatus from "./pages/buyer/components/dashboard/orders-status";
 import HistoryOrders from "./pages/buyer/components/dashboard/history";
 import Contact from "./pages/home/contact";
-import CheckOut from "./pages/buyer/components/check-out/check-out";
+import CheckOut from "./pages/buyer/components/check-out";
 import UserInfo from "./pages/buyer/components/dashboard/user-info";
 
 function App() {
