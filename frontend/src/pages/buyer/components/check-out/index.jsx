@@ -218,10 +218,13 @@ const CheckOut = () => {
         </div>
       </div>
       <div className="w-full h-20 bg-green-500 ">
-        <p className="text-white text-xl text-center pt-6">
-          &copy; {new Date().getFullYear()} samar002ms@gmail.com . All rights
-          reserved.
-        </p>
+        <footer className="flex flex-row justify-between items-center px-6 py-4 border-t-2 shadow-md">
+          <Logo />
+          <p className=" text-xl">
+            &copy; {new Date().getFullYear()} samar002ms@gmail.com{" "}
+          </p>
+          <p className="text-xl">All rights reserved.</p>
+        </footer>
       </div>
     </>
   );
