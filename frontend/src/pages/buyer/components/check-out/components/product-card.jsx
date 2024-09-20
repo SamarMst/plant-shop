@@ -2,11 +2,12 @@ import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const PlantCard = ({ plant }) => {
+const PlantCard = ({ plant, onCountChange }) => {
   const [quantity, setQuantity] = useState(plant.count || 1);
 
   useEffect(() => {
     updateLocalStorage();
+    onCountChange(plant.id, quantity);
   }, [quantity]);
 
   const handleQuantityChange = (event) => {

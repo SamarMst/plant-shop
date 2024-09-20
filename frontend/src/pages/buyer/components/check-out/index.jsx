@@ -24,6 +24,36 @@ const CheckOut = () => {
     useState(false);
   const navigate = useNavigate();
 
+  const calculateTotals = (plants) => {
+    const total = plants.reduce(
+      (acc, plant) => {
+        const plantTotal = (plant.price || 0) * (plant.count || 0);
+        return {
+          price: acc.price + plantTotal,
+          items: acc.items + (plant.count || 0),
+        };
+      },
+      { price: 0, items: 0 }
+    );
+
+    setTotalPrice(total.price);
+    setTotalItems(total.items);
+  };
+
+  const handleCountChange = (id, newCount) => {
+    setPlants((prevPlants) => {
+      const updatedPlants = prevPlants.map((plant) => {
+        if (plant.id === id) {
+          return { ...plant, count: newCount };
+        }
+        return plant;
+      });
+      localStorage.setItem("plant", JSON.stringify(updatedPlants));
+      calculateTotals(updatedPlants);
+      return updatedPlants;
+    });
+  };
+
   useEffect(() => {
     function getPlants() {
       const plantsString = localStorage.getItem("plant");
@@ -41,25 +71,14 @@ const CheckOut = () => {
             const uniquePlants = Object.values(plantMap);
             setPlants(uniquePlants);
 
-            const total = uniquePlants.reduce(
-              (acc, plant) => {
-                const plantTotal = (plant.price || 0) * (plant.count || 0);
-                return {
-                  price: acc.price + plantTotal,
-                  items: acc.items + (plant.count || 0),
-                };
-              },
-              { price: 0, items: 0 }
-            );
-
-            setTotalPrice(total.price);
-            setTotalItems(total.items);
+            calculateTotals(uniquePlants);
           }
         } catch (error) {
           console.error("Error parsing plants data:", error);
         }
       }
     }
+
     getPlants();
   }, []);
 
@@ -80,12 +99,18 @@ const CheckOut = () => {
         Plant Cart - {totalItems} plants
       </h1>
       <div className="flex flex-col">
-        <div className="flex space-x-44">
+        <div className="flex space-x-20">
           <div className="flex flex-col space-y-5 mt-8 ml-24">
             {plants.length === 0 ? (
               <p>No plants in the cart.</p>
             ) : (
-              plants.map((plant) => <PlantCard key={plant.id} plant={plant} />)
+              plants.map((plant) => (
+                <PlantCard
+                  key={plant.id}
+                  plant={plant}
+                  onCountChange={handleCountChange}
+                />
+              ))
             )}
           </div>
           <div className="flex flex-col border rounded-lg shadow-sm w-1/2 mt-8 ml-6 p-14">
@@ -104,12 +129,12 @@ const CheckOut = () => {
               <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle className="text-xl">
-                    Enter yourDiscount Code here
+                    Enter your Discount Code here
                   </DialogTitle>
                 </DialogHeader>
                 <div className="flex items-center space-x-2">
                   <div className="grid flex-1 gap-2">
-                    <Input id="gift-card" type="text" />
+                    <Input id="discount-code" type="text" />
                   </div>
                 </div>
                 <DialogFooter className="sm:justify-start">
@@ -190,10 +215,10 @@ const CheckOut = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full h-20  ">
+      <div className="w-full h-20">
         <footer className="flex flex-row justify-between items-center px-6 py-4 border-t-2 shadow-md">
           <Logo />
-          <p className=" text-xl">
+          <p className="text-xl">
             &copy; {new Date().getFullYear()} samar002ms@gmail.com{" "}
           </p>
           <p className="text-xl">All rights reserved.</p>
