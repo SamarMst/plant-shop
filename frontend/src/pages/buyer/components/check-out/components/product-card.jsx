@@ -2,33 +2,51 @@ import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const PlantCard = ({ plant, onDelete, onIncrement, onDecrement }) => {
+const PlantCard = ({ plant }) => {
   const [quantity, setQuantity] = useState(plant.count || 1);
-  const [totalPrice, setTotalPrice] = useState(plant.price * quantity);
 
   useEffect(() => {
-    setTotalPrice(plant.price * quantity);
-  }, [quantity, plant.price]);
+    updateLocalStorage();
+  }, [quantity]);
 
   const handleQuantityChange = (event) => {
-    const value = Number(event.target.value);
+    const value = parseFloat(event.target.value);
     setQuantity(value >= 1 ? value : 1);
   };
 
   const incrementQuantity = () => {
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
-    onIncrement(plant.id, newQuantity);
   };
 
   const decrementQuantity = () => {
     const newQuantity = quantity > 1 ? quantity - 1 : 1;
     setQuantity(newQuantity);
-    onDecrement(plant.id, newQuantity);
+  };
+
+  const updateLocalStorage = () => {
+    const plantsString = localStorage.getItem("plant");
+    let plantsArray = [];
+
+    if (plantsString) {
+      try {
+        plantsArray = JSON.parse(plantsString);
+      } catch (error) {
+        console.error("Error parsing plants data:", error);
+      }
+    }
+
+    const plantIndex = plantsArray.findIndex((p) => p.id === plant.id);
+
+    if (plantIndex !== -1) {
+      plantsArray[plantIndex].count = quantity;
+    }
+
+    localStorage.setItem("plant", JSON.stringify(plantsArray));
   };
 
   return (
-    <div className="flex items-center p-4 border border-gray-300 rounded-lg shadow-sm max-w-3xl ">
+    <div className="flex items-center p-4 border border-gray-300 rounded-lg shadow-sm max-w-3xl">
       <div className="flex-shrink-0 w-1/3">
         <img
           src={`http://localhost:4000/${plant.resources[0]?.filename}`}
@@ -42,7 +60,7 @@ const PlantCard = ({ plant, onDelete, onIncrement, onDecrement }) => {
         <p className="text-sm text-gray-600">
           Quantity Available: {plant.quantity}
         </p>
-        <p className="text-lg font-semibold text-green-600">{totalPrice} DT</p>
+        <p className="text-lg font-semibold text-green-600">{plant.price} DT</p>
         <div className="flex items-center justify-between mt-2 w-full">
           <div className="flex items-center border border-gray-300 rounded-md w-auto">
             <button
@@ -67,10 +85,7 @@ const PlantCard = ({ plant, onDelete, onIncrement, onDecrement }) => {
             </button>
           </div>
 
-          <button
-            className="text-red-500 hover:text-red-700 ml-4"
-            onClick={onDelete}
-          >
+          <button className="text-red-500 hover:text-red-700 ml-4">
             <Trash size={20} />
           </button>
         </div>

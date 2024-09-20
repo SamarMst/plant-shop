@@ -1,13 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo from "./logo";
-import {
-  Menu,
-  Search,
-  ShoppingCart,
-  User,
-  UserCircle,
-  UserCog,
-} from "lucide-react";
+import { Menu, Search, ShoppingCart, User, UserCircle } from "lucide-react";
 import useGetUserInfo from "@/hook/useGetUserInfo";
 import { useEffect, useState } from "react";
 
@@ -21,8 +14,10 @@ const Navbar = () => {
       if (plantsString) {
         try {
           const plantsArray = JSON.parse(plantsString);
-          const count = Array.isArray(plantsArray) ? plantsArray.length : 0;
-          setPlantCount(count);
+          const totalCount = Array.isArray(plantsArray)
+            ? plantsArray.reduce((acc, plant) => acc + (plant.count || 1), 0)
+            : 0;
+          setPlantCount(totalCount);
         } catch (error) {
           console.error("Error parsing plants data:", error);
           setPlantCount(0);
