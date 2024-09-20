@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 const CheckOut = () => {
   const [plants, setPlants] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
   const [isDialogGiftCardOpen, setIsDialogGiftCardOpen] = useState(false);
   const [isDialogDiscountCodeOpen, setIsDialogDiscountCodeOpen] =
     useState(false);
@@ -37,8 +37,23 @@ const CheckOut = () => {
               }
               return acc;
             }, {});
+
             const uniquePlants = Object.values(plantMap);
             setPlants(uniquePlants);
+
+            const total = uniquePlants.reduce(
+              (acc, plant) => {
+                const plantTotal = (plant.price || 0) * (plant.count || 0);
+                return {
+                  price: acc.price + plantTotal,
+                  items: acc.items + (plant.count || 0),
+                };
+              },
+              { price: 0, items: 0 }
+            );
+
+            setTotalPrice(total.price);
+            setTotalItems(total.items);
           }
         } catch (error) {
           console.error("Error parsing plants data:", error);
@@ -48,44 +63,11 @@ const CheckOut = () => {
     getPlants();
   }, []);
 
-  useEffect(() => {
-    const total = plants.reduce(
-      (sum, plant) => sum + plant.price * plant.count,
-      0
-    );
-    const quantity = plants.reduce((sum, plant) => sum + plant.count, 0);
-
-    setTotalPrice(total);
-    setTotalQuantity(quantity);
-  }, [plants]);
-
   const verifyGiftCard = () => {
     setIsDialogGiftCardOpen(false);
   };
   const verifyDiscountCode = () => {
     setIsDialogDiscountCodeOpen(false);
-  };
-
-  const handleDelete = (plantId) => {
-    const updatedPlants = plants.filter((plant) => plant.id !== plantId);
-    localStorage.setItem("plant", JSON.stringify(updatedPlants));
-    setPlants(updatedPlants);
-  };
-
-  const handleIncrement = (plantId, newQuantity) => {
-    const updatedPlants = plants.map((plant) =>
-      plant.id === plantId ? { ...plant, count: newQuantity } : plant
-    );
-    localStorage.setItem("plant", JSON.stringify(updatedPlants));
-    setPlants(updatedPlants);
-  };
-
-  const handleDecrement = (plantId, newQuantity) => {
-    const updatedPlants = plants.map((plant) =>
-      plant.id === plantId ? { ...plant, count: newQuantity } : plant
-    );
-    localStorage.setItem("plant", JSON.stringify(updatedPlants));
-    setPlants(updatedPlants);
   };
 
   return (
@@ -95,7 +77,7 @@ const CheckOut = () => {
       </nav>
       <hr className="border-2 font-bold" />
       <h1 className="ml-24 mt-20 font-semibold text-xl">
-        Plant Cart - {totalQuantity} plants
+        Plant Cart - {totalItems} plants
       </h1>
       <div className="flex flex-col">
         <div className="flex space-x-44">
@@ -103,19 +85,7 @@ const CheckOut = () => {
             {plants.length === 0 ? (
               <p>No plants in the cart.</p>
             ) : (
-              plants.map((plant) => (
-                <PlantCard
-                  key={plant.id}
-                  plant={plant}
-                  onDelete={() => handleDelete(plant.id)}
-                  onIncrement={(newQuantity) =>
-                    handleIncrement(plant.id, newQuantity)
-                  }
-                  onDecrement={(newQuantity) =>
-                    handleDecrement(plant.id, newQuantity)
-                  }
-                />
-              ))
+              plants.map((plant) => <PlantCard key={plant.id} plant={plant} />)
             )}
           </div>
           <div className="flex flex-col border rounded-lg shadow-sm w-1/2 mt-8 ml-6 p-14">

@@ -39,6 +39,7 @@ function Plant() {
   const handleAddToCart = () => {
     const plantsString = localStorage.getItem("plant");
     let plantsArray = [];
+
     if (plantsString) {
       try {
         plantsArray = JSON.parse(plantsString);
@@ -50,7 +51,12 @@ function Plant() {
         plantsArray = [];
       }
     }
-    plantsArray.push(plant);
+    const plantIndex = plantsArray.findIndex((p) => p.id === plant.id);
+    if (plantIndex !== -1) {
+      plantsArray[plantIndex].count = (plantsArray[plantIndex].count || 1) + 1;
+    } else {
+      plantsArray.push({ ...plant, count: 1 });
+    }
     localStorage.setItem("plant", JSON.stringify(plantsArray));
     console.log("Updated plants list:", plantsArray);
     window.dispatchEvent(new Event("storage"));
