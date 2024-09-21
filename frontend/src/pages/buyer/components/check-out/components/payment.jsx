@@ -1,9 +1,13 @@
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router-dom";
+import useGetUserInfo from "@/hook/useGetUserInfo";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Payment = () => {
+  const location = useLocation();
+  const totalPrice = location.state?.totalPrice || 0;
+  const { email } = useGetUserInfo();
   const navigate = useNavigate();
   return (
     <>
@@ -15,7 +19,7 @@ const Payment = () => {
         <div className="flex flex-col mt-14 ml-5 w-1/2">
           <div className="flex flex-col mb-5 p-4 border border-black rounded-lg shadow-sm w-full">
             <h3 className="font-sans font-semibold text-xl mb-4">Email</h3>
-            <h4 className="font-sans font-semibold text-xl">Email</h4>
+            <h4 className="font-sans font-semibold text-xl">{email}</h4>
           </div>
           <div className="flex flex-col p-4 border border-black rounded-lg shadow-sm w-full">
             <h3 className="font-sans font-semibold text-xl mb-4">Billing</h3>
@@ -69,7 +73,9 @@ const Payment = () => {
           <hr className="border-2 font-bold mb-4" />
           <div className="flex justify-between">
             <h3 className="text-lg font-sans font-bold">Total</h3>
-            <h3 className="text-lg font-sans font-bold mb-4">DT</h3>
+            <h3 className="text-lg font-sans font-bold mb-4">
+              {totalPrice} DT
+            </h3>
           </div>
           <Button className="text-center h-11 w-full text-xl font-sans mt-4 bg-black text-white border border-black rounded-md hover:bg-gray-900 hover:text-white transition-colors duration-300 mb-5">
             Pay
