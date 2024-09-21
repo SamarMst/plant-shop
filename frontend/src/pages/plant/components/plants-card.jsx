@@ -1,11 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import PlantButton from "./plant-button";
 
 const PlantesCard = ({ id, name, type, price, plantImage }) => {

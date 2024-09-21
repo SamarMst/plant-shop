@@ -55,6 +55,15 @@ const CheckOut = () => {
     });
   };
 
+  const handlePlantRemove = (id) => {
+    setPlants((prevPlants) => {
+      const updatedPlants = prevPlants.filter((plant) => plant.id !== id);
+      localStorage.setItem("plant", JSON.stringify(updatedPlants));
+      calculateTotals(updatedPlants);
+      return updatedPlants;
+    });
+  };
+
   useEffect(() => {
     function getPlants() {
       const plantsString = localStorage.getItem("plant");
@@ -97,7 +106,7 @@ const CheckOut = () => {
       </nav>
       <hr className="border-2 font-bold" />
       <h1 className="ml-24 mt-20 font-semibold text-xl">
-        Plant Cart - {totalItems} plants
+        {`Your Cart - ${totalItems} plants`}
       </h1>
       <div className="flex flex-col">
         <div className="flex space-x-20">
@@ -110,6 +119,7 @@ const CheckOut = () => {
                   key={plant.id}
                   plant={plant}
                   onCountChange={handleCountChange}
+                  onDelete={handlePlantRemove}
                 />
               ))
             )}
@@ -202,7 +212,7 @@ const CheckOut = () => {
                   : navigate("/payments", { state: { totalPrice } })
               }
             >
-              Proceed
+              {token ? "Proceed to Payment" : "Login to Continue"}
             </Button>
           </div>
         </div>
