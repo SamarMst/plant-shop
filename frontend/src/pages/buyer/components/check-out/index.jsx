@@ -23,6 +23,7 @@ const CheckOut = () => {
   const [isDialogDiscountCodeOpen, setIsDialogDiscountCodeOpen] =
     useState(false);
   const navigate = useNavigate();
+  const token = localStorage.getItem("authToken");
 
   const calculateTotals = (plants) => {
     const total = plants.reduce(
@@ -195,7 +196,11 @@ const CheckOut = () => {
             </div>
             <Button
               className="text-center h-11 w-full text-xl font-sans bg-black text-white border border-black rounded-md hover:bg-gray-900 hover:text-white transition-colors duration-300 mb-5"
-              onClick={() => navigate("/payments")}
+              onClick={() =>
+                !token
+                  ? navigate("/login")
+                  : navigate("/payments", { state: { totalPrice } })
+              }
             >
               Proceed
             </Button>

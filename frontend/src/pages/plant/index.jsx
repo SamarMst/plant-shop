@@ -10,12 +10,22 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import axiosInstance from "@/lib/axios-instance";
 
 function Plant() {
   const { id } = useParams();
   const [plant, setPlant] = useState(null);
   const [mainImage, setMainImage] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   async function fetchPlant() {
@@ -60,6 +70,7 @@ function Plant() {
     localStorage.setItem("plant", JSON.stringify(plantsArray));
     console.log("Updated plants list:", plantsArray);
     window.dispatchEvent(new Event("storage"));
+    setIsDialogOpen(true);
   };
 
   return (
@@ -79,7 +90,7 @@ function Plant() {
         <div className="w-full md:w-1/3 flex flex-col gap-4 p-4">
           <h1 className="text-2xl font-bold capitalize">{plant.name}</h1>
           <p className="text-lg">{plant.type}</p>
-          <p className="text-xl font-semibold">${plant.price}</p>
+          <p className="text-xl font-semibold">{plant.price} DT</p>
           <p>
             This is a lovely {plant.type} plant perfect for your home or office.
           </p>
@@ -90,6 +101,43 @@ function Plant() {
           >
             Add to Cart
           </Button>
+          {isDialogOpen && (
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="text-center mb-3 h-11 w-full text-xl font-sans bg-white text-black border border-black rounded-md hover:bg-black hover:text-white transition-colors duration-300">
+                  Do you have a Discount Code?
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="text-xl">
+                    Added into your cart
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex items-center space-x-2">
+                  <div className=" flex justify-center items-center m-auto">
+                    <img
+                      src={`http://localhost:4000/${mainImage}`}
+                      alt={plant.name}
+                      className=" w-2/3"
+                    />
+                  </div>
+                </div>
+                <DialogFooter className="sm:justify-start">
+                  <DialogClose asChild>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => navigate("/checkOut")}
+                      className="flex justify-center items-center p-5 ml-20  mt-3 h-11 text-lg font-sans bg-[#fee001] text-black rounded-md hover:bg-black hover:text-white transition-colors duration-300"
+                    >
+                      Go to the cart Plant
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
           <div className="flex justify-center items-center w-full">
             <Carousel
               opts={{
