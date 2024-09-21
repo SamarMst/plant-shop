@@ -16,11 +16,7 @@ const UserInfo = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await axiosInstance.get(`/user/${id}/info`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axiosInstance.get(`/user/${id}/info`);
         const { name, lastname, age } = response.data;
         setName(name);
         setLastName(lastname);

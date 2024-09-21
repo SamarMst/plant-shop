@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const PlantCard = ({ plant, onCountChange }) => {
+const PlantCard = ({ plant, onCountChange, onDelete }) => {
   const [quantity, setQuantity] = useState(plant.count || 1);
 
   useEffect(() => {
@@ -10,6 +10,28 @@ const PlantCard = ({ plant, onCountChange }) => {
     onCountChange(plant.id, quantity);
   }, [quantity]);
 
+  useEffect(() => {
+    updateLocalStorage();
+    onCountChange(plant.id, quantity);
+  }, [quantity]);
+
+  const handleDelete = () => {
+    const plantsString = localStorage.getItem("plant");
+    let plantsArray = [];
+
+    if (plantsString) {
+      try {
+        plantsArray = JSON.parse(plantsString);
+      } catch (error) {
+        console.error("Error parsing plants data:", error);
+      }
+    }
+    const updatedPlantsArray = plantsArray.filter((p) => p.id !== plant.id);
+    localStorage.setItem("plant", JSON.stringify(updatedPlantsArray));
+    if (onDelete) {
+      onDelete(plant.id);
+    }
+  };
   const handleQuantityChange = (event) => {
     const value = parseFloat(event.target.value);
     setQuantity(value >= 1 ? value : 1);
@@ -86,7 +108,10 @@ const PlantCard = ({ plant, onCountChange }) => {
             </button>
           </div>
 
-          <button className="text-red-500 hover:text-red-700 ml-4">
+          <button
+            className="text-red-500 hover:text-red-700 ml-4"
+            onClick={handleDelete}
+          >
             <Trash size={20} />
           </button>
         </div>

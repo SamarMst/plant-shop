@@ -2,13 +2,38 @@ import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useGetUserInfo from "@/hook/useGetUserInfo";
+import axiosInstance from "@/lib/axios-instance";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Payment = () => {
   const location = useLocation();
   const totalPrice = location.state?.totalPrice || 0;
   const { email } = useGetUserInfo();
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const { id } = useGetUserInfo();
   const navigate = useNavigate();
+
+  const handlePay = () => {
+    localStorage.removeItem("plant");
+  };
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axiosInstance.get(`/user/${id}/info`);
+        const { name, lastname } = response.data;
+        setName(name);
+        setLastName(lastname);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [id]);
+
   return (
     <>
       <nav className="py-4 w-full flex justify-center items-center">
@@ -32,9 +57,19 @@ const Payment = () => {
               placeholder="for example: home, job ..."
             />
             <h5 className="font-sans font-semibold text-sm p-1">Name *</h5>
-            <Input className="font-sans text-lg h-12" type="text" required />
+            <Input
+              className="font-sans text-lg h-12"
+              type="text"
+              required
+              value={name}
+            />
             <h5 className="font-sans font-semibold text-sm p-1">Last Name *</h5>
-            <Input className="font-sans text-lg h-12" type="text" required />
+            <Input
+              className="font-sans text-lg h-12"
+              type="text"
+              required
+              value={lastName}
+            />
             <h5 className="font-sans font-semibold text-sm p-1">CAP *</h5>
             <Input className="font-sans text-lg h-12" type="text" required />
             <h5 className="font-sans font-semibold text-sm p-1">City *</h5>
