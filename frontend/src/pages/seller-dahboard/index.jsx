@@ -28,7 +28,7 @@ const SellerDashboard = () => {
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex flex-col flex-grow">
-        <div className="bg-[#10b981] text-white p-4 flex justify-between items-center">
+        <div className="bg-[#10b981] text-white py-5 px-6 flex justify-between items-center ">
           <div className="text-lg font-bold">
             Welcome, {name} {lastName} !
           </div>
