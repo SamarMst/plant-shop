@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import axiosInstance from "@/lib/axios-instance";
-import Toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useGetUserInfo from "@/hook/useGetUserInfo";
+import axiosInstance from "@/lib/axios-instance";
+import { useEffect, useState } from "react";
+import Toast from "react-hot-toast";
 
-const UserInfo = () => {
+const SellerInfo = () => {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState(18);
@@ -16,13 +16,14 @@ const UserInfo = () => {
     const fetchUserInfo = async () => {
       try {
         const response = await axiosInstance.get(`/user/${id}/info`);
-        const { name, lastname, age } = response.data;
-        setName(name);
-        setLastName(lastname);
-        setAge(age);
+        if (response.data) {
+          const { name, lastname, age } = response.data;
+          setName(name);
+          setLastName(lastname);
+          setAge(age);
+        }
       } catch (error) {
         console.error("Error fetching user info:", error);
-        Toast.error("Failed to fetch user info.");
       }
     };
 
@@ -31,7 +32,6 @@ const UserInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axiosInstance.post(`/user/${id}/info`, {
         name,
@@ -46,7 +46,7 @@ const UserInfo = () => {
 
   return (
     <>
-      <div className="flex-grow p-4 border border-black rounded-lg bg-white">
+      <div className="flex-grow p-4 mt-10 border rounded-lg bg-white">
         <h3 className="text-xl font-bold mb-2">Your personal details </h3>
         <div className="text-sm text-gray-700">
           <form onSubmit={handleSubmit}>
@@ -77,7 +77,7 @@ const UserInfo = () => {
               type="submit"
               className="flex my-5 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700 mb-9"
             >
-              Save
+              {name || lastName || age ? "Update" : "Save"}
             </Button>
           </form>
         </div>
@@ -86,4 +86,4 @@ const UserInfo = () => {
   );
 };
 
-export default UserInfo;
+export default SellerInfo;
