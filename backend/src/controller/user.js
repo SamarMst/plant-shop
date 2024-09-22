@@ -10,7 +10,6 @@ const setUserInfo = async (req, res) => {
   }
 
   try {
-    // Find user by userId
     const user = await prisma.user.findUnique({
       where: { id: parseInt(userId) },
     });
@@ -19,28 +18,25 @@ const setUserInfo = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if userInfo already exists
     const existingUserInfo = await prisma.userInfo.findUnique({
       where: { userId: user.id },
     });
 
     if (existingUserInfo) {
-      // Update existing user info
       const updatedUserInfo = await prisma.userInfo.update({
         where: { userId: user.id },
-        data: { name, lastname, age },
+        data: { name, lastname, age: parseInt(age) },
       });
       return res.status(200).json({
         message: "User info updated successfully",
         userInfo: updatedUserInfo,
       });
     } else {
-      // Create new user info
       const newUserInfo = await prisma.userInfo.create({
         data: {
           name,
           lastname,
-          age,
+          age: parseInt(age),
           user: { connect: { id: user.id } },
         },
       });
@@ -57,7 +53,6 @@ const setUserInfo = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   const { userId } = req.params;
-
   try {
     const userInfo = await prisma.userInfo.findUnique({
       where: { userId: parseInt(userId) },
@@ -74,9 +69,6 @@ const getUserInfo = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-
 
 module.exports = {
   setUserInfo,
