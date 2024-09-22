@@ -23,6 +23,7 @@ import Contact from "./pages/home/contact";
 import CheckOut from "./pages/buyer/components/check-out";
 import UserInfo from "./pages/buyer/components/dashboard/user-info";
 import Payment from "./pages/buyer/components/check-out/components/payment";
+import SellerInfo from "./pages/seller-dahboard/components/seller-info";
 
 function App() {
   const router = createBrowserRouter([
@@ -58,6 +59,7 @@ function App() {
         { path: "category", element: <Category /> },
         { path: "orders", element: <Orders /> },
         { path: "history", element: <History /> },
+        { path: "seller-info", element: <SellerInfo /> },
       ],
     },
   ]);
