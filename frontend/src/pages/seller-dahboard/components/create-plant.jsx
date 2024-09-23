@@ -1,3 +1,11 @@
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import { useDropzone } from "react-dropzone";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
+import axiosInstance from "@/lib/axios-instance";
 import {
   Card,
   CardContent,
@@ -6,14 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
-import Select from "react-select";
-import { useDropzone } from "react-dropzone";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "react-hot-toast";
-import axiosInstance from "@/lib/axios-instance";
 
 function CreatePlant() {
   const [plantName, setPlantName] = useState("");
@@ -22,6 +22,7 @@ function CreatePlant() {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState([]);
   const [images, setImages] = useState([]);
+  const [categories, setCategories] = useState([]); // Categories state to hold fetched data
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/jpeg, image/png",
@@ -30,6 +31,23 @@ function CreatePlant() {
     },
   });
 
+  useEffect(() => {
+    // Fetch categories when the component mounts
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosInstance.get("/category/history/sold"); 
+        const categories = response.data.map((cat) => ({
+          value: cat.id,   
+          label: cat.name, 
+        }));
+        setCategories(categories);
+      } catch (error) {
+        toast.error("Failed to load categories",error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -37,11 +55,14 @@ function CreatePlant() {
     formData.append("quantity", quantity);
     formData.append("type", type);
     formData.append("price", price);
-    formData.append("categoryIds", category);
-
-    images.map((file) => {
+    formData.append("categoryIds", category.map(c => c.value)); 
+    const x = formData.get('categoryIds')
+    console.log(x)
+    console.log(typeof x)
+    images.forEach((file) => {
       formData.append("files", file);
     });
+
     try {
       const result = await axiosInstance.post(`/plante`, formData, {
         headers: {
@@ -49,13 +70,13 @@ function CreatePlant() {
         },
       });
       toast.success(result.data.message);
-      setPlantName("");
-      setCategory("");
-      setQuantity("");
-      setType("");
-      setPrice("");
-      setCategory([]);
-      setImages([]);
+      // setPlantName("");
+      // setCategory([]);
+      // setQuantity("");
+      // setType("INDOOR");
+      // setPrice("");
+      // setImages([]);
+
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -66,14 +87,14 @@ function CreatePlant() {
       <CardHeader>
         <CardTitle>Create Plant</CardTitle>
         <CardDescription>
-          Fill in the details to add a new plant.{" "}
+          Fill in the details to add a new plant.
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
         <CardContent>
           <div className="grid gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>{" "}
+              <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
                 placeholder="Name of the plant"
@@ -99,6 +120,7 @@ function CreatePlant() {
                   { value: "OUTDOOR", label: "Outdoor" },
                 ]}
                 placeholder="Select type"
+                value={{ value: type, label: type === "INDOOR" ? "Indoor" : "Outdoor" }}
                 onChange={(option) => setType(option?.value)}
               />
             </div>
@@ -114,11 +136,12 @@ function CreatePlant() {
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="category">Category</Label>
-              <Input
-                id="category"
-                placeholder="Category"
+              <Select
+                options={categories}
+                placeholder="Select category"
+                isMulti
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={setCategory}
               />
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -153,4 +176,5 @@ function CreatePlant() {
     </Card>
   );
 }
+
 export default CreatePlant;

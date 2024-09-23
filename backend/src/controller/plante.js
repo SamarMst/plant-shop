@@ -4,8 +4,7 @@ const yup = require("yup");
 
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
-  const categoryIdsArray =
-    typeof categoryIds === "string" ? categoryIds.split(",") : categoryIds;
+  let arr = categoryIds.split(',').map(Number)
 
   const userId = req.user.id;
   const files = req.files || [];
@@ -23,23 +22,6 @@ const createPlant = async (req, res) => {
       return res.status(409).json({ message: "Plant already exists." });
     }
 
-    const categoryChecks = categoryIdsArray.map((id) =>
-      prisma.plantCategory.findFirst({ where: { id: parseInt(id) } })
-    );
-
-    const existingCategories = await Promise.all(categoryChecks);
-    const invalidCategoryIds = categoryIdsArray.filter(
-      (id, index) => !existingCategories[index]
-    );
-
-    if (invalidCategoryIds.length > 0) {
-      return res.status(400).json({
-        message: `Categories with ids ${invalidCategoryIds.join(
-          ", "
-        )} do not exist.`,
-      });
-    }
-
     const newStockStatus = quantity > 0;
 
     const newPlant = await prisma.plant.create({
@@ -51,7 +33,7 @@ const createPlant = async (req, res) => {
         stock: newStockStatus,
         userId,
         categories: {
-          create: categoryIdsArray.map((id) => ({
+          create: arr.map((id) => ({
             plantCategory: { connect: { id: parseInt(id) } },
           })),
         },
