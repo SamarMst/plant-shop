@@ -28,7 +28,7 @@ const DeletePlant = ({ id }) => {
     try {
       await axiosInstance.delete(`/plante/${id}`);
       setIsDialogOpen(false);
-      navigate("/dashboard/plants");
+      navigate("/seller/plants");
     } catch (error) {
       console.log("Error deleting plant:", error);
     }
