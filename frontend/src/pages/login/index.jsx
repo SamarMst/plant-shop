@@ -26,7 +26,7 @@ function Login() {
       localStorage.setItem("authToken", token);
       const { role } = useGetUserInfo();
       {
-        role === "SELLER" ? navigate("/dashboard/plants") : navigate("/");
+        role === "SELLER" ? navigate("/seller/plants") : navigate("/");
       }
     } catch (error) {
       setError("Invalid credentials. Please try again.");

@@ -4,7 +4,7 @@ const yup = require("yup");
 
 const createPlant = async (req, res) => {
   const { name, type, price, quantity, categoryIds } = req.body;
-  let arr = categoryIds.split(',').map(Number)
+  let arr = categoryIds.split(",").map(Number);
 
   const userId = req.user.id;
   const files = req.files || [];

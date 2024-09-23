@@ -8,7 +8,6 @@ import CreatePlant from "./pages/seller-dahboard/components/create-plant";
 import UpdatePlant from "./pages/seller-dahboard/components/update-plant";
 import DeletePlant from "./pages/seller-dahboard/components/delete-plant";
 import GetPlantById from "./pages/seller-dahboard/components/get-plant-by-id";
-import GetMyPlants from "./pages/seller-dahboard/components/get-my-plant";
 import Category from "./pages/seller-dahboard/components/category";
 import GetPlantsInStock from "./pages/seller-dahboard/components/get-in-stock";
 import GetPlantsNotInStock from "./pages/seller-dahboard/components/get-not-in-stock";
@@ -24,6 +23,7 @@ import CheckOut from "./pages/buyer/components/check-out";
 import UserInfo from "./pages/buyer/components/dashboard/user-info";
 import Payment from "./pages/buyer/components/check-out/components/payment";
 import SellerInfo from "./pages/seller-dahboard/components/seller-info";
+import Plants from "./pages/seller-dahboard/page/plants";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,17 +45,16 @@ function App() {
     { path: "/login", element: <Login /> },
     { path: "/checkOut", element: <CheckOut /> },
     {
-      path: "/dashboard",
+      path: "/seller",
       element: <SellerDashboard />,
       children: [
-        { path: "plants/create", element: <CreatePlant /> },
-        { path: "plants/update/id", element: <UpdatePlant /> },
+        
+        { path: "plants", element: <Plants /> },
         { path: "plants/stock", element: <GetPlantsInStock /> },
         { path: "plants/notinstock", element: <GetPlantsNotInStock /> },
         { path: "plants/restock", element: <RestockMyPlant /> },
         { path: "plants/delete", element: <DeletePlant /> },
         { path: "plants/byId", element: <GetPlantById /> },
-        { path: "plants", element: <GetMyPlants /> },
         { path: "category", element: <Category /> },
         { path: "orders", element: <Orders /> },
         { path: "history", element: <History /> },
