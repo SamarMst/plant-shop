@@ -55,7 +55,7 @@ const Navbar = () => {
           </Link>
         </div>
         {role === "SELLER" && (
-          <Link to="dashboard">
+          <Link to="seller">
             <UserCircle />
           </Link>
         )}
