@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./components/sideBar";
 import useGetUserInfo from "@/hook/useGetUserInfo";
 import axiosInstance from "@/lib/axios-instance";
+import NavbarSeller from "./components/navbar-seller";
 
 const SellerDashboard = () => {
   const { id } = useGetUserInfo();
@@ -28,11 +29,7 @@ const SellerDashboard = () => {
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex flex-col flex-grow">
-        <div className="bg-[#10b981] text-white py-5 px-6 flex justify-between items-center ">
-          <div className="text-lg font-bold">
-            Welcome, {name} {lastName} !
-          </div>
-        </div>
+        <NavbarSeller />
         <div className="p-6 flex-grow overflow-auto ">
           <Outlet />
         </div>
