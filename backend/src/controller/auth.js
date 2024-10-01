@@ -41,7 +41,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
-      res.status(400).json({ message: "please fill the empty fields" });
+      return res.status(400).json({ message: "please fill the empty fields" });
     }
 
     const accountExist = await prisma.user.findFirst({
@@ -50,11 +50,11 @@ const login = async (req, res) => {
       },
     });
     if (!accountExist) {
-      res.status(404).json({ message: "account does not exist" });
+      return res.status(404).json({ message: "account does not exist" });
     }
     const samePassword = await bcrypt.compare(password, accountExist.password);
     if (!samePassword) {
-      res.status(401).json({ message: "Incorrect password" });
+      return res.status(401).json({ message: "Incorrect password" });
     }
     const accessToken = jwt.sign(
       {
@@ -67,7 +67,7 @@ const login = async (req, res) => {
         expiresIn: "1d",
       }
     );
-    res.status(200).json({ token: accessToken });
+    res.status(200).json({ token: accessToken ,role: accountExist.role});
   } catch (error) {
     console.error("Error creating account:", error);
     res.status(500).json({ message: error.message });
