@@ -27,8 +27,9 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col gap-4 min-h-screen w-full">
+    <div className="flex flex-col justify-between gap-4 min-h-screen  w-full">
       <Navbar />
+      <>
       <Hero />
       <div className="md:px-40 flex flex-col md:flex-row justify-center items-center md:flex-wrap gap-4">
         {plants.slice(0, visiblePlants).map((plant) => (
@@ -51,8 +52,8 @@ function Home() {
             Show More
           </button>
         </div>
-      )}
-      <footer className="flex flex-row justify-between items-center px-6 py-4 border-t-2 shadow-md">
+      )}</>
+      <footer className="flex flex-row justify-between items-center px-6 py-4  border-t-2 shadow-md">
         <Logo />
         <p>Copyright 2024</p>
         <p>samar002ms@gmail.com</p>

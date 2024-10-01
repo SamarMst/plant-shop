@@ -24,6 +24,7 @@ import UserInfo from "./pages/buyer/components/dashboard/user-info";
 import Payment from "./pages/buyer/components/check-out/components/payment";
 import SellerInfo from "./pages/seller-dahboard/components/seller-info";
 import Plants from "./pages/seller-dahboard/page/plants";
+import DashboardSeller from "./pages/seller-dahboard/page/dashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -48,7 +49,8 @@ function App() {
       path: "/seller",
       element: <SellerDashboard />,
       children: [
-        
+        { path: "dashboard", element: <DashboardSeller /> },
+
         { path: "plants", element: <Plants /> },
         { path: "plants/stock", element: <GetPlantsInStock /> },
         { path: "plants/notinstock", element: <GetPlantsNotInStock /> },
