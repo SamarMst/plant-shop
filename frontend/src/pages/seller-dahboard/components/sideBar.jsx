@@ -1,85 +1,43 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { routes } from "./route";
-import { Layers3, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 const Sidebar = () => {
-  const [openRoute, setOpenRoute] = useState(null);
   const navigate = useNavigate();
-  const toggleMenu = (path) => {
-    setOpenRoute(openRoute === path ? null : path);
-  };
+
   const logOut = () => {
     localStorage.removeItem("authToken");
     navigate("/");
   };
+
   return (
-    <div className="text-white h-screen w-64 bg-[#047857] flex flex-col">
-      <div className="py-5 px-6 font-bold text-lg border-b border-gray-700">
+    <div className="flex flex-col h-screen w-64 bg-[#005B31] text-white shadow-lg"> {/* Soft green background */}
+      <div className="py-5 px-6 text-lg font-bold "> {/* Light cream border */}
         Seller Dashboard
       </div>
-      <nav className="flex flex-col p-4 space-y-4 flex-grow">
-        {routes.map(({ path, label, icon: Icon, subRoutes }) => (
-          <div key={path}>
-            {subRoutes ? (
-              <>
-                <button
-                  onClick={() => toggleMenu(path)}
-                  className="flex items-center gap-4 p-2 w-full rounded-lg hover:bg-blue-700 focus:outline-none"
-                >
-                  <Icon className="w-6 h-6" />
-                  <span>{label}</span>
-                  <Layers3
-                    className={`w-4 h-4 ml-auto transform ${
-                      openRoute === path ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {openRoute === path && (
-                  <div className="mt-2 ml-8 flex flex-col space-y-2">
-                    {subRoutes.map(
-                      ({ path: subPath, label: subLabel, icon: SubIcon }) => (
-                        <NavLink
-                          key={subPath}
-                          to={`${path}${subPath}`}
-                          className={({ isActive }) =>
-                            `flex items-center gap-4 p-2 rounded-lg ${
-                              isActive ? "bg-blue-700" : "hover:bg-blue-700"
-                            }`
-                          }
-                        >
-                          <SubIcon className="w-6 h-6" />
-                          <span>{subLabel}</span>
-                        </NavLink>
-                      )
-                    )}
-                  </div>
-                )}
-              </>
-            ) : (
-              <NavLink
-                key={path}
-                to={path}
-                className={({ isActive }) =>
-                  `flex items-center gap-4 p-2 rounded-lg ${
-                    isActive ? "bg-blue-700" : "hover:bg-blue-700"
-                  }`
-                }
-              >
-                <Icon className="w-6 h-6" />
-                <span>{label}</span>
-              </NavLink>
-            )}
-          </div>
+      <nav className="flex flex-col flex-grow p-4 space-y-4">
+        {routes.map(({ path, label, icon: Icon }) => (
+          <NavLink
+            key={path}
+            to={path}
+            className={({ isActive }) =>
+              `flex items-center gap-4 p-3 rounded-lg transition-all duration-200 ${
+                isActive ? "bg-[#7BAE7F] shadow-md" : "hover:bg-[#A3C9A8]" /* Soft green hover effect */
+              }`
+            }
+          >
+            <Icon className="w-6 h-6" />
+            <span className="font-medium">{label}</span>
+          </NavLink>
         ))}
       </nav>
-      <div className="p-4 border-t border-gray-700">
+      <div className="p-4 "> {/* Light cream border */}
         <button
-          className="flex items-center gap-4 p-2 w-full rounded-lg hover:bg-blue-700"
+          className="flex items-center gap-4 w-full p-3 rounded-lg hover:bg-[#A3C9A8] transition-colors duration-200"
           onClick={logOut}
         >
           <LogOut className="w-6 h-6" />
-          <span>Logout</span>
+          <span className="font-medium">Logout</span>
         </button>
       </div>
     </div>
