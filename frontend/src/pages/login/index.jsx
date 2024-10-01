@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/nav-bar";
 import { useNavigate } from "react-router-dom";
-import useGetUserInfo from "@/hook/useGetUserInfo";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -22,14 +21,21 @@ function Login() {
         email,
         password,
       });
-      const { token } = response.data;
-      localStorage.setItem("authToken", token);
-      const { role } = useGetUserInfo();
-      {
-        role === "SELLER" ? navigate("/seller/plants") : navigate("/");
+      const data = response.data;
+      localStorage.setItem("authToken", data.token);
+      switch (data.role) {
+        case "SELLER":
+          navigate("/seller/dashboard");
+          break;
+        case "BUYER":
+          navigate("/buyer/dashboard");
+          break;
+        default:
+          navigate("/");
+          break;
       }
     } catch (error) {
-      setError("Invalid credentials. Please try again.");
+      setError(error.response.data.message);
       console.error("Login error:", error);
     }
   };
