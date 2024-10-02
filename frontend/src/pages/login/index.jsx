@@ -28,7 +28,7 @@ function Login() {
           navigate("/seller/dashboard");
           break;
         case "BUYER":
-          navigate("/buyer/dashboard");
+          navigate("/buyer");
           break;
         default:
           navigate("/");

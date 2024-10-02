@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import GetInspired from "./components/get-inspired";
 import { useNavigate } from "react-router-dom";
+import useGetUserInfo from "@/hook/useGetUserInfo";
 
 const CheckOut = () => {
   const [plants, setPlants] = useState([]);
@@ -22,82 +23,83 @@ const CheckOut = () => {
   const [isDialogGiftCardOpen, setIsDialogGiftCardOpen] = useState(false);
   const [isDialogDiscountCodeOpen, setIsDialogDiscountCodeOpen] =
     useState(false);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("authToken");
+    const navigate = useNavigate();
+    const { email } = useGetUserInfo();
+    const token = localStorage.getItem("authToken");
 
-  const calculateTotals = (plants) => {
-    const total = plants.reduce(
-      (acc, plant) => {
-        const plantTotal = (plant.price || 0) * (plant.count || 0);
-        return {
-          price: acc.price + plantTotal,
-          items: acc.items + (plant.count || 0),
-        };
-      },
-      { price: 0, items: 0 }
-    );
-
-    setTotalPrice(total.price);
-    setTotalItems(total.items);
-  };
-
-  const handleCountChange = (id, newCount) => {
-    setPlants((prevPlants) => {
-      const updatedPlants = prevPlants.map((plant) => {
-        if (plant.id === id) {
-          return { ...plant, count: newCount };
-        }
-        return plant;
-      });
-      localStorage.setItem("plant", JSON.stringify(updatedPlants));
-      calculateTotals(updatedPlants);
-      return updatedPlants;
-    });
-  };
-
-  const handlePlantRemove = (id) => {
-    setPlants((prevPlants) => {
-      const updatedPlants = prevPlants.filter((plant) => plant.id !== id);
-      localStorage.setItem("plant", JSON.stringify(updatedPlants));
-      calculateTotals(updatedPlants);
-      return updatedPlants;
-    });
-  };
-
-  useEffect(() => {
-    function getPlants() {
-      const plantsString = localStorage.getItem("plant");
-      if (plantsString) {
-        try {
-          const plantsArray = JSON.parse(plantsString);
-          if (Array.isArray(plantsArray)) {
-            const plantMap = plantsArray.reduce((acc, plant) => {
-              if (!acc[plant.id]) {
-                acc[plant.id] = { ...plant, count: plant.count || 1 };
-              }
-              return acc;
-            }, {});
-
-            const uniquePlants = Object.values(plantMap);
-            setPlants(uniquePlants);
-
-            calculateTotals(uniquePlants);
+    const calculateTotals = (plants) => {
+      const total = plants.reduce(
+        (acc, plant) => {
+          const plantTotal = (plant.price || 0) * (plant.count || 0);
+          return {
+            price: acc.price + plantTotal,
+            items: acc.items + (plant.count || 0),
+          };
+        },
+        { price: 0, items: 0 }
+      );
+  
+      setTotalPrice(total.price);
+      setTotalItems(total.items);
+    };
+  
+    const handleCountChange = (id, newCount) => {
+      setPlants((prevPlants) => {
+        const updatedPlants = prevPlants.map((plant) => {
+          if (plant.id === id) {
+            return { ...plant, count: newCount };
           }
-        } catch (error) {
-          console.error("Error parsing plants data:", error);
+          return plant;
+        });
+        localStorage.setItem(email, JSON.stringify(updatedPlants));
+        calculateTotals(updatedPlants);
+        return updatedPlants;
+      });
+    };
+  
+    const handlePlantRemove = (id) => {
+      setPlants((prevPlants) => {
+        const updatedPlants = prevPlants.filter((plant) => plant.id !== id);
+        localStorage.setItem(email, JSON.stringify(updatedPlants));
+        calculateTotals(updatedPlants);
+        return updatedPlants;
+      });
+    };
+  
+    useEffect(() => {
+      function getPlants() {
+        const plantsString = localStorage.getItem(email);
+        if (plantsString) {
+          try {
+            const plantsArray = JSON.parse(plantsString);
+            if (Array.isArray(plantsArray)) {
+              const plantMap = plantsArray.reduce((acc, plant) => {
+                if (!acc[plant.id]) {
+                  acc[plant.id] = { ...plant, count: plant.count || 1 };
+                }
+                return acc;
+              }, {});
+  
+              const uniquePlants = Object.values(plantMap);
+              setPlants(uniquePlants);
+  
+              calculateTotals(uniquePlants);
+            }
+          } catch (error) {
+            console.error("Error parsing plants data:", error);
+          }
         }
       }
-    }
-
-    getPlants();
-  }, []);
-
-  const verifyGiftCard = () => {
-    setIsDialogGiftCardOpen(false);
-  };
-  const verifyDiscountCode = () => {
-    setIsDialogDiscountCodeOpen(false);
-  };
+  
+      getPlants();
+    }, [email]);
+  
+    const verifyGiftCard = () => {
+      setIsDialogGiftCardOpen(false);
+    };
+    const verifyDiscountCode = () => {
+      setIsDialogDiscountCodeOpen(false);
+    };
 
   return (
     <>
