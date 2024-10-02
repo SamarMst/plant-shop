@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/nav-bar";
 import { useNavigate } from "react-router-dom";
@@ -36,7 +36,6 @@ function Login() {
       }
     } catch (error) {
       setError(error.response.data.message);
-      console.error("Login error:", error);
     }
   };
 

@@ -13,5 +13,4 @@ export const routes = [
   { path: "/seller/orders", label: "Orders", icon: PackageSearch },
   { path: "/seller/category", label: "Category", icon: ChartColumnStacked },
   { path: "/seller/history", label: "History", icon: FileClock },
-  { path: "/seller/seller-info", label: "Seller Info", icon: BookUser },
 ];
