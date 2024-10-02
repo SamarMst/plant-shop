@@ -9,6 +9,7 @@ import {
 import PlantButton from "./plant-button";
 
 const PlantCard = ({ name, type, price, plantCategory, plantImage }) => {
+  
   return (
     <div className="flex flex-row">
       <img

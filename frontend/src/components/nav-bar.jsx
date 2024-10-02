@@ -5,12 +5,12 @@ import useGetUserInfo from "@/hook/useGetUserInfo";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
-  const { role } = useGetUserInfo();
+  const { role, email } = useGetUserInfo();
   const [plantCount, setPlantCount] = useState(0);
 
   useEffect(() => {
     function countPlants() {
-      const plantsString = localStorage.getItem("plant");
+      const plantsString = localStorage.getItem(email); // Use the user's email
       if (plantsString) {
         try {
           const plantsArray = JSON.parse(plantsString);
@@ -31,7 +31,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("storage", countPlants);
     };
-  }, []);
+  }, [email]);
 
   return (
     <nav className="flex justify-between md:justify-around items-center py-4 w-full ">

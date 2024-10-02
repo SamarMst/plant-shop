@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import axiosInstance from "@/lib/axios-instance";
+import useGetUserInfo from "@/hook/useGetUserInfo";
 
 function Plant() {
   const { id } = useParams();
@@ -27,6 +28,7 @@ function Plant() {
   const [mainImage, setMainImage] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const {email} = useGetUserInfo();
 
   async function fetchPlant() {
     try {
@@ -47,31 +49,32 @@ function Plant() {
   if (!plant) return <div>Loading...</div>;
 
   const handleAddToCart = () => {
-    const plantsString = localStorage.getItem("plant");
+    const userEmail = email; 
     let plantsArray = [];
-
-    if (plantsString) {
-      try {
-        plantsArray = JSON.parse(plantsString);
-        if (!Array.isArray(plantsArray)) {
-          plantsArray = [];
-        }
-      } catch (error) {
-        console.error("Error parsing plants data:", error);
+  
+    try {
+      const plantsString = localStorage.getItem(userEmail);
+      plantsArray = plantsString ? JSON.parse(plantsString) : [];
+      if (!Array.isArray(plantsArray)) {
         plantsArray = [];
       }
+    } catch (error) {
+      console.error("Error parsing plants data:", error);
+      plantsArray = [];
     }
+  
     const plantIndex = plantsArray.findIndex((p) => p.id === plant.id);
     if (plantIndex !== -1) {
       plantsArray[plantIndex].count = (plantsArray[plantIndex].count || 1) + 1;
     } else {
       plantsArray.push({ ...plant, count: 1 });
     }
-    localStorage.setItem("plant", JSON.stringify(plantsArray));
-    console.log("Updated plants list:", plantsArray);
+  
+    localStorage.setItem(userEmail, JSON.stringify(plantsArray));
     window.dispatchEvent(new Event("storage"));
     setIsDialogOpen(true);
   };
+  
 
   return (
     <div className="flex flex-col gap-12 min-h-screen p-2">
