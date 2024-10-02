@@ -22,7 +22,7 @@ import Contact from "./pages/home/contact";
 import CheckOut from "./pages/buyer/components/check-out";
 import UserInfo from "./pages/buyer/components/dashboard/user-info";
 import Payment from "./pages/buyer/components/check-out/components/payment";
-import SellerInfo from "./pages/seller-dahboard/components/seller-info";
+import SellerInfo from "./pages/seller-dahboard/page/info";
 import Plants from "./pages/seller-dahboard/page/plants";
 import DashboardSeller from "./pages/seller-dahboard/page/dashboard";
 
