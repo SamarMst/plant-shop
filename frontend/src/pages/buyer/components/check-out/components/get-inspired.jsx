@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import axiosInstance from "@/lib/axios-instance";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const GetInspired = () => {
   const [plants, setPlants] = useState([]);
@@ -39,11 +40,13 @@ const GetInspired = () => {
               <Card>
                 <CardContent className="flex aspect-square items-center justify-center p-6">
                   {plant.resources[0]?.filename ? (
-                    <img
-                      src={`http://localhost:4000/${plant.resources[0].filename}`}
-                      alt={`Plant ${plant.name}`}
-                      className="object-cover w-full h-full"
-                    />
+                    <Link to={`/plant/${plant.id}`}  className=""> 
+                      <img
+                        src={`http://localhost:4000/${plant.resources[0].filename}`}
+                        alt={`Plant ${plant.name}`}
+                        className="object-cover aspect-square "
+                      /> 
+                    </Link>
                   ) : (
                     <span className="text-3xl font-semibold">{index + 1}</span>
                   )}

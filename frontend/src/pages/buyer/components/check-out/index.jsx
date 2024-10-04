@@ -203,7 +203,7 @@ const CheckOut = () => {
             <div className="flex justify-between">
               <h3 className="text-lg font-sans font-bold">Total</h3>
               <h3 className="text-lg font-sans font-bold mb-4">
-                {totalPrice} DT
+                {totalPrice.toFixed(2)} DT
               </h3>
             </div>
             <Button
