@@ -19,7 +19,7 @@ const DashboarBuyer = () => {
               key={path}
               to={path}
               variant="outline"
-              className="text-lg w-48 h-12 flex items-center justify-center"
+              className="text-lg font-semibold w-48 h-12 flex items-center justify-center border rounded-md hover:bg-accent hover:text-accent-foreground"
             >
               <span>{label}</span>
             </NavLink>
