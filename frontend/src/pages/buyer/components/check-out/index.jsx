@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import GetInspired from "./components/get-inspired";
 import { useNavigate } from "react-router-dom";
 import useGetUserInfo from "@/hook/useGetUserInfo";
+import Footer from "@/components/ui/footer";
 
 const CheckOut = () => {
   const [plants, setPlants] = useState([]);
@@ -232,15 +233,7 @@ const CheckOut = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full h-20">
-        <footer className="flex flex-row justify-between items-center px-6 py-4 border-t-2 shadow-md">
-          <Logo />
-          <p className="text-xl">
-            &copy; {new Date().getFullYear()} samar002ms@gmail.com{" "}
-          </p>
-          <p className="text-xl">All rights reserved.</p>
-        </footer>
-      </div>
+      <Footer />
     </>
   );
 };
