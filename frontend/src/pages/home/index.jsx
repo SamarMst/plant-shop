@@ -4,6 +4,7 @@ import Navbar from "../../components/nav-bar";
 import Hero from "./components/hero";
 import Logo from "@/components/logo";
 import axiosInstance from "@/lib/axios-instance";
+import Footer from "@/components/ui/footer";
 
 function Home() {
   const [plants, setPlants] = useState([]);
@@ -53,11 +54,7 @@ function Home() {
           </button>
         </div>
       )}</>
-      <footer className="flex flex-row justify-between items-center px-6 py-4  border-t-2 shadow-md">
-        <Logo />
-        <p>Copyright 2024</p>
-        <p>samar002ms@gmail.com</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
