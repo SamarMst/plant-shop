@@ -9,7 +9,7 @@ const PlantCard = ({
   type,
   price,
   quantity,
-  category,
+  category = [],
   plantImage,
 }) => {
   const { role } = useGetUserInfo();
@@ -23,7 +23,10 @@ const PlantCard = ({
       />
       <h1 className="capitalize text-4xl font-bold">{name}</h1>
       <p className="text-xs text-gray-400">{type}</p>
-      <p className="text-xs text-gray-400">{id}</p>
+      {/* <p className="text-xs text-gray-400">{id}</p> */}
+      <p className="text-xs text-gray-400">
+      {category.map(c => c.plantCategory?.name).join(", ")}
+      </p>
       <p className="font-bold">{price} TND</p>
 
       {role === "SELLER" ? (

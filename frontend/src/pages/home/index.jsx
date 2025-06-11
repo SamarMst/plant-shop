@@ -2,7 +2,6 @@ import PlantCard from "./components/plant-card";
 import { useEffect, useState } from "react";
 import Navbar from "../../components/nav-bar";
 import Hero from "./components/hero";
-import Logo from "@/components/logo";
 import axiosInstance from "@/lib/axios-instance";
 import Footer from "@/components/ui/footer";
 
@@ -39,6 +38,7 @@ function Home() {
             key={plant.id}
             name={plant.name}
             type={plant.type}
+            category={plant.categories}
             price={plant.price}
             plantImage={plant.resources[0]?.filename}
           />
