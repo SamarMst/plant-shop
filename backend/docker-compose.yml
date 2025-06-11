@@ -8,7 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: root_password  
       MYSQL_DATABASE: plant_shop      
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
     - project1_mysql_data:/var/lib/mysql
 
