@@ -8,7 +8,6 @@ function Shop() {
     "/videos/bg2.mp4",
     "/videos/bg3.mp4",
     "/videos/bg4.mp4",
-    "/videos/bg5.mp4",
   ];
 
   const [selectedVideo, setSelectedVideo] = useState("");
