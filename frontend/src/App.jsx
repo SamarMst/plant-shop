@@ -25,12 +25,15 @@ import Payment from "./pages/buyer/components/check-out/components/payment";
 import SellerInfo from "./pages/seller-dahboard/page/info";
 import Plants from "./pages/seller-dahboard/page/plants";
 import DashboardSeller from "./pages/seller-dahboard/page/dashboard";
+import Shop from "./pages/shop";
+
 
 function App() {
   const router = createBrowserRouter([
     { path: "/", element: <Home /> },
     { path: "/payments", element: <Payment /> },
     { path: "/contact", element: <Contact /> },
+    { path: "/shop", element: <Shop /> },
     { path: "/plant/:id", element: <Plant /> },
     {
       path: "/buyer",

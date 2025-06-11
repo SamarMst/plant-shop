@@ -3,9 +3,15 @@ import Navbar from "@/components/nav-bar";
 const Contact = () => {
   return (
     <>
-      <Navbar />
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="flex space-x-10">
+     <Navbar />
+   <div
+      className="flex min-h-screen items-center justify-center bg-white bg-cover bg-center"
+      style={{ backgroundImage: "url('/images/fiori.jpeg')" }}
+      /* style={{ backgroundImage: "url('/images/contact-bg.jpeg')" }} */
+    >
+     
+      <div className="flex min-h-screen items-center justify-center ">
+        <div className="flex space-x-10 bg-white p-2 rounded-lg shadow-lg">
           <video width="200" height="150" autoPlay muted loop>
             <source src="./images/handsPlant.mp4" type="video/mp4" />
           </video>
@@ -64,6 +70,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
+    </div>
     </>
   );
 };
